@@ -1,4 +1,4 @@
-package com.internship;
+package com.internship.model;
 
 import java.util.Date;
 

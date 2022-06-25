@@ -1,4 +1,4 @@
-package com.internship;
+package com.internship.model;
 
 import java.util.List;
 
@@ -36,5 +36,4 @@ public class User {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
-
 }
