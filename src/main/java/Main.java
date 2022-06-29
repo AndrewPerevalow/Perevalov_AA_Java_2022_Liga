@@ -5,10 +5,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    private final static String DEFAULT_STATUS = "Новое";
-    private final static String WORK_STATUS = "В работе";
-    private final static String COMPLETE_STATUS = "Готово";
-
 
     public static void main(String[] args) {
         TaskTracker taskTracker = new TaskTrackerImpl();
@@ -19,7 +15,8 @@ public class Main {
             try {
                 sc.nextLine();
                 System.out.println("Input your command...");
-                System.out.println("All commands: STOP_APP, PRINT_ALL_USER_TASKS, CHANGE_TASKS_STATUS");
+                System.out.println("All commands: STOP_APP, PRINT_ALL_USER_TASKS, CHANGE_TASKS_STATUS, " +
+                            "ADD_NEW_TASK, REMOVE_TASK, EDIT_TASK, ADD_NEW_USER, REMOVE_USER, CLEAN_ALL");
                 command = sc.nextLine();
                 switch (command) {
                     case "STOP_APP" -> System.exit(0);
@@ -30,9 +27,7 @@ public class Main {
                         String printCommand = sc.nextLine();
                         System.out.println("Input user id you want to print: ");
                         int idUser = sc.nextInt();
-                        if (idUser < 1 || idUser > taskTracker.getCountUsers()) {
-                            throw new NullPointerException();
-                        }
+
                         switch (printCommand) {
                             case "WITHOUT_FILTER" -> taskTracker.printAllTasksForUsers(idUser);
 
@@ -40,11 +35,7 @@ public class Main {
                                 System.out.println("Choose status you want to filter: Новое, В работе, Готово");
                                 sc.nextLine();
                                 String filterStatus = sc.nextLine();
-                                if (filterStatus.equals(DEFAULT_STATUS) || filterStatus.equals(WORK_STATUS) || filterStatus.equals(COMPLETE_STATUS)) {
-                                    taskTracker.filterAllTasksForUsersByStatus(idUser, filterStatus);
-                                } else {
-                                    throw new InputMismatchException();
-                                }
+                                taskTracker.filterAllTasksForUsersByStatus(idUser, filterStatus);
                             }
                             default -> throw new InputMismatchException();
                         }
@@ -57,16 +48,62 @@ public class Main {
                         System.out.println("What status do you want to set: Новое, В работе, Готово");
                         sc.nextLine();
                         String newStatus = sc.nextLine();
-                        if (newStatus.equals(DEFAULT_STATUS) || newStatus.equals(WORK_STATUS) || newStatus.equals(COMPLETE_STATUS)) {
-                            taskTracker.changeTaskStatus(idTask, newStatus);
-                        } else {
-                            throw new InputMismatchException();
-                        }
+                        taskTracker.changeTaskStatus(idTask, newStatus);
+
                     }
+
+
+                    case "ADD_NEW_TASK" -> {
+                        System.out.println("Input header: ");
+                        String header = sc.nextLine();
+                        System.out.println("Input description: ");
+                        String description = sc.nextLine();
+                        System.out.println("Input user id: ");
+                        int idUser = sc.nextInt();
+                        System.out.println("Input date deadline(date format -> dd.MM.yyyy): ");
+                        sc.nextLine();
+                        String deadline = sc.nextLine();
+                        taskTracker.addNewTask(header, description, idUser, deadline);
+                    }
+
+                    case "REMOVE_TASK" -> {
+                        System.out.println("Input task id: ");
+                        int idTask = sc.nextInt();
+                        taskTracker.removeTask(idTask);
+                    }
+
+                    case "EDIT_TASK" -> {
+                        System.out.println("Input task id: ");
+                        int idTask = sc.nextInt();
+                        System.out.println("Input another header: ");
+                        sc.nextLine();
+                        String header = sc.nextLine();
+                        System.out.println("Input another description: ");
+                        String description = sc.nextLine();
+                        System.out.println("Input another user id: ");
+                        int idUser = sc.nextInt();
+                        System.out.println("Input another date deadline(date format -> dd.MM.yyyy): ");
+                        sc.nextLine();
+                        String deadline = sc.nextLine();
+                        taskTracker.editTask(idTask, header, description, idUser, deadline);
+                    }
+
+                    case "ADD_NEW_USER" -> {
+                        System.out.println("Input user name: ");
+                        String userName = sc.nextLine();
+                        taskTracker.addNewUser(userName);
+                    }
+
+                    case "REMOVE_USER" -> {
+                        System.out.println("Input user id: ");
+                        int idUser = sc.nextInt();
+                        taskTracker.removeUser(idUser);
+                    }
+
+                    case "CLEAN_ALL" -> taskTracker.cleanAllTaskTracker();
+
                     default -> throw new InputMismatchException();
                 }
-            } catch (NullPointerException exception) {
-                System.err.println("User with this id doesn't exists");
             } catch (InputMismatchException exception) {
                 System.err.println("Incorrect input values");
             }
