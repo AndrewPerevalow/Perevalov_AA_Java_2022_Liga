@@ -4,11 +4,12 @@ import com.internship.model.Task;
 import com.internship.model.User;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class CSVParser implements Parser {
+public class CSVReader implements Reader {
     private final static String DEFAULT_STATUS = "Новое";
 
     @Override
@@ -33,7 +34,11 @@ public class CSVParser implements Parser {
     private Task createTask(String[] data) {
         Task task = null;
         try {
-            task = new Task(Integer.parseInt(data[0]), data[1], data[2], Integer.parseInt(data[3]), new SimpleDateFormat("dd.MM.yyyy").parse(data[4]), DEFAULT_STATUS);
+            if (data.length < 6) {
+                task = new Task(Integer.parseInt(data[0]), data[1], data[2], Integer.parseInt(data[3]), new SimpleDateFormat("dd.MM.yyyy").parse(data[4]), DEFAULT_STATUS);
+            } else {
+                task = new Task(Integer.parseInt(data[0]), data[1], data[2], Integer.parseInt(data[3]), new SimpleDateFormat("dd.MM.yyyy").parse(data[4]), data[5]);
+            }
         } catch (ParseException exception) {
             System.err.println("Parse fail" + exception.getMessage());
         }
