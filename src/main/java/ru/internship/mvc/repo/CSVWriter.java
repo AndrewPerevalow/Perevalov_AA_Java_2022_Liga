@@ -1,15 +1,24 @@
-package com.internship;
+package ru.internship.mvc.repo;
 
-import com.internship.model.Task;
-import com.internship.model.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import ru.internship.mvc.model.Task;
+import ru.internship.mvc.model.User;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Component
 public class CSVWriter implements Writer {
     private static final String CSV_SEPARATOR = ", ";
-    private final static String DEFAULT_STATUS = "Новое";
+
+    private static String DEFAULT_STATUS;
+
+    @Value("${statuses.default-status}")
+    public void setDefaultStatus(String status) {
+        CSVWriter.DEFAULT_STATUS = status;
+    }
 
     @Override
     public void writeListTasks (String fileName, List<Task> taskList, Map<Integer, User> usersMap) throws InputMismatchException {
@@ -19,30 +28,14 @@ public class CSVWriter implements Writer {
                 StringBuilder sb = new StringBuilder();
                 sb.append(task.getId());
                 sb.append(CSV_SEPARATOR);
-                if (task.getHeader().trim().length() != 0) {
-                    sb.append(task.getHeader());
-                } else {
-                    throw new InputMismatchException();
-                }
+                sb.append(task.getHeader());
                 sb.append(CSV_SEPARATOR);
-                if (task.getDescription().trim().length() != 0) {
-                    sb.append(task.getDescription());
-                } else {
-                    throw new InputMismatchException();
-                }
+                sb.append(task.getDescription());
                 sb.append(CSV_SEPARATOR);
-                if (usersMap.containsKey(task.getIdUser())) {
-                    sb.append(task.getIdUser());
-                } else {
-                    throw new InputMismatchException();
-                }
+                sb.append(task.getIdUser());
                 sb.append(CSV_SEPARATOR);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                if (isDateValid(task.getDeadline())) {
-                    sb.append(dateFormat.format(task.getDeadline()));
-                } else {
-                    throw new InputMismatchException();
-                }
+                sb.append(dateFormat.format(task.getDeadline()));
                 if (!(task.getStatus().equals(DEFAULT_STATUS))) {
                     sb.append(CSV_SEPARATOR);
                     sb.append(task.getStatus());
@@ -56,15 +49,6 @@ public class CSVWriter implements Writer {
         }
     }
 
-    private boolean isDateValid(Date inputDate) {
-        if (inputDate == null) {
-            return false;
-        }
-        Date currentDate = new Date();
-        int result = inputDate.compareTo(currentDate);
-        return result >= 0;
-    }
-
     @Override
     public void writeUsers (String fileName, Map<Integer, User> usersMap) throws InputMismatchException {
         File csvFile = new File("src/main/resources/" + fileName);
@@ -73,11 +57,7 @@ public class CSVWriter implements Writer {
                 StringBuilder sb = new StringBuilder();
                 sb.append(user.getId());
                 sb.append(CSV_SEPARATOR);
-                if (user.getUserName().trim().length() != 0) {
-                    sb.append(user.getUserName());
-                } else {
-                    throw new InputMismatchException();
-                }
+                sb.append(user.getUserName());
                 sb.append("\n");
                 csvWriter.write(sb.toString());
             }

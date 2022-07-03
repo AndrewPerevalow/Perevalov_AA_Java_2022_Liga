@@ -1,7 +1,7 @@
-package com.internship;
+package ru.internship.mvc.repo;
 
-import com.internship.model.Task;
-import com.internship.model.User;
+import ru.internship.mvc.model.Task;
+import ru.internship.mvc.model.User;
 
 import java.util.InputMismatchException;
 import java.util.List;

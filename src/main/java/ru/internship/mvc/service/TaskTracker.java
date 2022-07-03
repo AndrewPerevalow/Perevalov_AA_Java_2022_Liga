@@ -1,4 +1,4 @@
-package com.internship;
+package ru.internship.mvc.service;
 
 import java.util.Date;
 
