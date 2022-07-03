@@ -1,16 +1,24 @@
-package com.internship;
+package ru.internship.mvc.repo;
 
-import com.internship.model.Task;
-import com.internship.model.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import ru.internship.mvc.model.Task;
+import ru.internship.mvc.model.User;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Component
 public class CSVReader implements Reader {
-    private final static String DEFAULT_STATUS = "Новое";
+
+    private static String DEFAULT_STATUS;
+
+    @Value("${statuses.default-status}")
+    public void setDefaultStatus(String status) {
+        CSVReader.DEFAULT_STATUS = status;
+    }
 
     @Override
     public List<Task> getListTasks(String fileName) {

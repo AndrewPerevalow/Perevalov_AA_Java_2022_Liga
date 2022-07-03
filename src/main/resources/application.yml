@@ -1,0 +1,7 @@
+statuses:
+  default-status: Новое
+  work-status: В работе
+  complete-status: Готово
+files:
+  user-file: users.csv
+  task-file: tasks.csv
