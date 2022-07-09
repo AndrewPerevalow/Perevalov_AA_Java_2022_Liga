@@ -12,6 +12,8 @@ import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TaskTrackerImpl implements TaskTracker {
@@ -57,16 +59,37 @@ public class TaskTrackerImpl implements TaskTracker {
     public void firstInit() {
         usersMap = csvReader.getMapUsers(userFile);
         tasksList = csvReader.getListTasks(taskFile);
+        getAllTasksForUsers();
+    }
+
+    public Map<Integer, User> getUsersMap() {
+        return usersMap;
+    }
+
+    public List<Task> getTasksList() {
+        return tasksList;
+    }
+
+    public void setUsersMap(Map<Integer, User> usersMap) {
+        this.usersMap = usersMap;
+    }
+
+    public void setTasksList(List<Task> tasksList) {
+        this.tasksList = tasksList;
     }
 
 
-    @Override
-    public void getAllTasksForUsers() {
+    private void getAllTasksForUsers() {
         for (Task task : tasksList) {
             if (usersMap.containsKey(task.getIdUser())) {
                 usersMap.get(task.getIdUser()).getTasks().add(task);
             }
         }
+    }
+
+    @Override
+    public void stopApplication() {
+        System.exit(0);
     }
 
     @Override
@@ -76,10 +99,10 @@ public class TaskTrackerImpl implements TaskTracker {
             if (listTasks.size() != 0) {
                 System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
             } else {
-                System.err.println("This user doesn't have any tasks");
+                throw new InputMismatchException("This user doesn't have any tasks");
             }
         } else {
-            System.err.println("User with this id doesn't exists");
+            throw new InputMismatchException("User with this id doesn't exist");
         }
     }
 
@@ -91,17 +114,16 @@ public class TaskTrackerImpl implements TaskTracker {
                 listTasks = usersMap.get(idUser).getTasks().stream()
                         .filter(a -> a.getStatus().equals(status)).toList();
             } else {
-                System.err.println("Incorrect input values");
-                return;
+                throw new InputMismatchException("Incorrect status");
             }
             if (listTasks.size() != 0) {
                 System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
 
             } else {
-                System.err.println("This user doesn't have tasks with this status");
+                throw new InputMismatchException("This user doesn't have tasks with this status");
             }
         } else {
-            System.err.println("User with this id doesn't exists");
+            throw new InputMismatchException("User with this id doesn't exist");
         }
     }
 
@@ -115,9 +137,9 @@ public class TaskTrackerImpl implements TaskTracker {
                     return;
                 }
             }
-            System.err.println("Task with this id doesn't exists");
+            throw new InputMismatchException("Task with this id doesn't exist");
         } else {
-            System.err.println("Incorrect input values");
+            throw new InputMismatchException("Incorrect status");
         }
     }
 
@@ -133,15 +155,13 @@ public class TaskTrackerImpl implements TaskTracker {
                     csvWriter.writeListTasks(taskFile, tasksList, usersMap);
                     System.out.println("New task added");
                 } else {
-                    throw new InputMismatchException();
+                    throw new InputMismatchException("Incorrect input values");
                 }
             } catch (ParseException exception) {
-                System.err.println("Parse fail" + exception.getMessage());
-            } catch (InputMismatchException exception) {
-                System.err.println("Incorrect input values");
+                System.err.println("Parse fail: " + exception.getMessage());
             }
         } else {
-            System.err.println("User with this id doesn't exists");
+            throw new InputMismatchException("User with this id doesn't exist");
         }
     }
 
@@ -155,18 +175,18 @@ public class TaskTrackerImpl implements TaskTracker {
             csvWriter.writeListTasks(taskFile, tasksList, usersMap);
             System.out.println("Task deleted");
         } else {
-            System.err.println("Task with this id doesn't exists");
+            throw new InputMismatchException("Task with this id doesn't exist");
         }
     }
 
     @Override
     public void addNewUser(String userName) {
-        if (userName.trim().length() != 0) {
+        if (isNameValid(userName)) {
             usersMap.put(usersMap.size() + 1, new User(usersMap.size() + 1, userName, new ArrayList<>()));
             csvWriter.writeUsers(userFile, usersMap);
             System.out.println("New user added");
         } else {
-            System.err.println("Incorrect input values");
+            throw new InputMismatchException("Incorrect user name");
         }
     }
 
@@ -177,7 +197,7 @@ public class TaskTrackerImpl implements TaskTracker {
             csvWriter.writeUsers(userFile, usersMap);
             System.out.println("User deleted");
         } else {
-            System.err.println("User with this id doesn't exists");
+            throw new InputMismatchException("User with this id doesn't exist");
         }
     }
 
@@ -187,7 +207,7 @@ public class TaskTrackerImpl implements TaskTracker {
             try {
                 Date dateDeadline = new SimpleDateFormat("dd.MM.yyyy").parse(deadline);
                 if (isValidInput(header,description,dateDeadline)) {
-                    Task task = tasksList.stream().filter(t -> t.getId() == idTask).findFirst().orElseThrow(NoSuchElementException::new);
+                    Task task = tasksList.stream().filter(t -> t.getId() == idTask).findFirst().orElseThrow(() -> new InputMismatchException("Task with this id doesn't exist"));
                     task.setHeader(header);
                     task.setDescription(description);
                     task.setIdUser(idUser);
@@ -198,17 +218,13 @@ public class TaskTrackerImpl implements TaskTracker {
                     csvWriter.writeListTasks(taskFile, tasksList, usersMap);
                     System.out.println("Task edited");
                 } else {
-                    throw new InputMismatchException();
+                    throw new InputMismatchException("Incorrect input values");
                 }
-            } catch (InputMismatchException exception) {
-                System.err.println("Incorrect input values");
-            } catch (NoSuchElementException exception) {
-                System.err.println("Task with this id doesn't exists");
             } catch (ParseException exception) {
-                System.err.println("Parse fail" + exception.getMessage());
+                System.err.println("Parse fail: " + exception.getMessage());
             }
         } else {
-            System.err.println("User with this id doesn't exists");
+            throw new InputMismatchException("User with this id doesn't exist");
         }
     }
 
@@ -222,17 +238,26 @@ public class TaskTrackerImpl implements TaskTracker {
     }
 
     private boolean isValidInput(String header, String description, Date deadline) {
+        if (header == null) return false;
         if (header.trim().length() == 0) return false;
+        if (description == null) return false;
         if (description.trim().length() == 0) return false;
         return isDateValid(deadline);
     }
 
     private boolean isDateValid(Date inputDate) {
-        if (inputDate == null) {
-            return false;
-        }
+        if (inputDate == null) return false;
         Date currentDate = new Date();
         int result = inputDate.compareTo(currentDate);
         return result >= 0;
+    }
+
+    private boolean isNameValid(String userName) {
+        String regex = "[A-Za-zА-Яа-я]{3,29}";
+        Pattern pattern = Pattern.compile(regex);
+        if (userName == null) return false;
+        if (userName.trim().length() == 0) return false;
+        Matcher matcher = pattern.matcher(userName);
+        return matcher.matches();
     }
 }

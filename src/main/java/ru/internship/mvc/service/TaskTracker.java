@@ -1,9 +1,7 @@
 package ru.internship.mvc.service;
 
-import java.util.Date;
-
 public interface TaskTracker {
-    void getAllTasksForUsers();
+    void stopApplication();
     void printAllTasksForUsers(int idUser);
     void filterAllTasksForUsersByStatus(int idUser, String status);
     void changeTaskStatus(int idTask, String newStatus);

@@ -13,6 +13,7 @@ import java.util.*;
 @Component
 public class CSVReader implements Reader {
 
+    private static final int COUNT_VALUES_ONE_TASK = 6;
     private static String DEFAULT_STATUS;
 
     @Value("${statuses.default-status}")
@@ -34,7 +35,7 @@ public class CSVReader implements Reader {
         } catch (FileNotFoundException exception) {
             System.err.println("File not found");
         } catch (IOException exception) {
-            System.err.println("Failed file read" + exception.getMessage());
+            System.err.println("Failed file read: " + exception.getMessage());
         }
         return tasksList;
     }
@@ -42,13 +43,13 @@ public class CSVReader implements Reader {
     private Task createTask(String[] data) {
         Task task = null;
         try {
-            if (data.length < 6) {
+            if (data.length < COUNT_VALUES_ONE_TASK) {
                 task = new Task(Integer.parseInt(data[0]), data[1], data[2], Integer.parseInt(data[3]), new SimpleDateFormat("dd.MM.yyyy").parse(data[4]), DEFAULT_STATUS);
             } else {
                 task = new Task(Integer.parseInt(data[0]), data[1], data[2], Integer.parseInt(data[3]), new SimpleDateFormat("dd.MM.yyyy").parse(data[4]), data[5]);
             }
         } catch (ParseException exception) {
-            System.err.println("Parse fail" + exception.getMessage());
+            System.err.println("Parse fail: " + exception.getMessage());
         }
         return task;
     }
@@ -67,7 +68,7 @@ public class CSVReader implements Reader {
         } catch (FileNotFoundException exception) {
             System.err.println("File not found");
         } catch (IOException exception) {
-            System.err.println("Failed file read" + exception.getMessage());
+            System.err.println("Failed file read: " + exception.getMessage());
         }
         return usersMap;
     }
