@@ -21,7 +21,7 @@ public class CSVWriter implements Writer {
     }
 
     @Override
-    public void writeListTasks (String fileName, List<Task> taskList, Map<Integer, User> usersMap) throws InputMismatchException {
+    public void writeListTasks (String fileName, List<Task> taskList, Map<Integer, User> usersMap) {
         File csvFile = new File("src/main/resources/" + fileName);
         try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(csvFile))) {
             for (Task task : taskList) {
@@ -45,12 +45,12 @@ public class CSVWriter implements Writer {
             }
             csvWriter.flush();
         } catch (IOException exception) {
-            System.err.println("Failed file write" + exception.getMessage());
+            System.err.println("Failed file write: " + exception.getMessage());
         }
     }
 
     @Override
-    public void writeUsers (String fileName, Map<Integer, User> usersMap) throws InputMismatchException {
+    public void writeUsers (String fileName, Map<Integer, User> usersMap) {
         File csvFile = new File("src/main/resources/" + fileName);
         try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(csvFile))) {
             for (User user : usersMap.values()) {
@@ -63,7 +63,7 @@ public class CSVWriter implements Writer {
             }
             csvWriter.flush();
         } catch (IOException exception) {
-            System.err.println("Failed file write" + exception.getMessage());
+            System.err.println("Failed file write: " + exception.getMessage());
         }
     }
 }
