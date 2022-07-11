@@ -2,20 +2,31 @@ package ru.internship.mvc.service.command;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.TaskTracker;
+import ru.internship.mvc.service.TaskTrackerInfo;
 
 @Service("printall_withfilter")
 public class FilterAllTasksForUsersByStatusCommand implements Command {
 
-    private final TaskTracker taskTracker;
+    private final TaskTrackerInfo taskTrackerInfo;
+
+    private int idUser;
+    private String status;
+
 
     @Autowired
-    public FilterAllTasksForUsersByStatusCommand(TaskTracker taskTracker) {
-        this.taskTracker = taskTracker;
+    public FilterAllTasksForUsersByStatusCommand(TaskTrackerInfo taskTrackerInfo) {
+        this.taskTrackerInfo = taskTrackerInfo;
     }
 
     @Override
-    public void execute(String... args) {
-        taskTracker.filterAllTasksForUsersByStatus(Integer.parseInt(args[0]), args[1]);
+    public void execute() {
+        taskTrackerInfo.filterAllTasksForUsersByStatus(idUser, status);
+    }
+
+    @Override
+    public Command createCommand(String[] args) {
+        this.idUser = Integer.parseInt(args[0]);
+        this.status = args[1];
+        return this;
     }
 }
