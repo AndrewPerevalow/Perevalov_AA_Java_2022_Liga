@@ -9,14 +9,24 @@ public class ChangeTaskStatusCommand implements Command {
 
     private final TaskTracker taskTracker;
 
+    private int idTask;
+    private String newStatus;
+
     @Autowired
     public ChangeTaskStatusCommand(TaskTracker taskTracker) {
         this.taskTracker = taskTracker;
     }
 
     @Override
-    public void execute(String... args) {
-        taskTracker.changeTaskStatus(Integer.parseInt(args[0]), args[1]);
+    public void execute() {
+        taskTracker.changeTaskStatus(idTask, newStatus);
+    }
+
+    @Override
+    public Command createCommand(String[] args) {
+        this.idTask = Integer.parseInt(args[0]);
+        this.newStatus = args[1];
+        return this;
     }
 }
 

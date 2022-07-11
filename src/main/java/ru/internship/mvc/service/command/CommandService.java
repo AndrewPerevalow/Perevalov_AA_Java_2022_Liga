@@ -42,13 +42,13 @@ public class CommandService {
         try {
             String[] args = splitCommand[1].split(",");
             if (commandMap.containsKey(splitCommand[0])) {
-                commandMap.get(splitCommand[0]).execute(args);
+                commandMap.get(splitCommand[0]).createCommand(args).execute();
             } else {
                 throw new InputMismatchException("Incorrect input values");
             }
         } catch (ArrayIndexOutOfBoundsException exception) {
             if (commandMap.containsKey(splitCommand[0])) {
-                commandMap.get(splitCommand[0]).execute("");
+                commandMap.get(splitCommand[0]).execute();
             } else {
                 throw new InputMismatchException("Incorrect input values");
             }

@@ -3,7 +3,6 @@ package ru.internship.mvc.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.repo.Reader;
 import ru.internship.mvc.repo.Writer;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
@@ -12,8 +11,7 @@ import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @Service
 public class TaskTrackerImpl implements TaskTracker {
@@ -44,22 +42,22 @@ public class TaskTrackerImpl implements TaskTracker {
     @Value("${files.task-file}")
     private String taskFile;
 
-    private final Reader csvReader;
     private final Writer csvWriter;
+    private final Initialize init;
+
     private Map<Integer, User> usersMap;
     private List<Task> tasksList;
 
     @Autowired
-    TaskTrackerImpl(Reader csvReader, Writer csvWriter) {
-        this.csvReader = csvReader;
+    TaskTrackerImpl(Initialize init, Writer csvWriter) {
+        this.init = init;
         this.csvWriter = csvWriter;
     }
 
     @PostConstruct
     public void firstInit() {
-        usersMap = csvReader.getMapUsers(userFile);
-        tasksList = csvReader.getListTasks(taskFile);
-        getAllTasksForUsers();
+        tasksList = init.getTasksList();
+        usersMap = init.getUsersMap();
     }
 
     public Map<Integer, User> getUsersMap() {
@@ -78,53 +76,9 @@ public class TaskTrackerImpl implements TaskTracker {
         this.tasksList = tasksList;
     }
 
-
-    private void getAllTasksForUsers() {
-        for (Task task : tasksList) {
-            if (usersMap.containsKey(task.getIdUser())) {
-                usersMap.get(task.getIdUser()).getTasks().add(task);
-            }
-        }
-    }
-
     @Override
     public void stopApplication() {
         System.exit(0);
-    }
-
-    @Override
-    public void printAllTasksForUsers(int idUser) {
-        if (usersMap.containsKey(idUser)) {
-            List<Task> listTasks = usersMap.get(idUser).getTasks();
-            if (listTasks.size() != 0) {
-                System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
-            } else {
-                throw new InputMismatchException("This user doesn't have any tasks");
-            }
-        } else {
-            throw new InputMismatchException("User with this id doesn't exist");
-        }
-    }
-
-    @Override
-    public void filterAllTasksForUsersByStatus(int idUser, String status) {
-        if (usersMap.containsKey(idUser)) {
-            List<Task> listTasks;
-            if (status.equals(DEFAULT_STATUS) || status.equals(WORK_STATUS) || status.equals(COMPLETE_STATUS)) {
-                listTasks = usersMap.get(idUser).getTasks().stream()
-                        .filter(a -> a.getStatus().equals(status)).toList();
-            } else {
-                throw new InputMismatchException("Incorrect status");
-            }
-            if (listTasks.size() != 0) {
-                System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
-
-            } else {
-                throw new InputMismatchException("This user doesn't have tasks with this status");
-            }
-        } else {
-            throw new InputMismatchException("User with this id doesn't exist");
-        }
     }
 
     @Override
@@ -180,28 +134,6 @@ public class TaskTrackerImpl implements TaskTracker {
     }
 
     @Override
-    public void addNewUser(String userName) {
-        if (isNameValid(userName)) {
-            usersMap.put(usersMap.size() + 1, new User(usersMap.size() + 1, userName, new ArrayList<>()));
-            csvWriter.writeUsers(userFile, usersMap);
-            System.out.println("New user added");
-        } else {
-            throw new InputMismatchException("Incorrect user name");
-        }
-    }
-
-    @Override
-    public void removeUser(int idUser) {
-        if (usersMap.containsKey(idUser)) {
-            usersMap.remove(idUser);
-            csvWriter.writeUsers(userFile, usersMap);
-            System.out.println("User deleted");
-        } else {
-            throw new InputMismatchException("User with this id doesn't exist");
-        }
-    }
-
-    @Override
     public void editTask(int idTask, String header, String description, int idUser, String deadline) {
         if (usersMap.containsKey(idUser)) {
             try {
@@ -250,14 +182,5 @@ public class TaskTrackerImpl implements TaskTracker {
         Date currentDate = new Date();
         int result = inputDate.compareTo(currentDate);
         return result >= 0;
-    }
-
-    private boolean isNameValid(String userName) {
-        String regex = "[A-Za-zА-Яа-я]{3,29}";
-        Pattern pattern = Pattern.compile(regex);
-        if (userName == null) return false;
-        if (userName.trim().length() == 0) return false;
-        Matcher matcher = pattern.matcher(userName);
-        return matcher.matches();
     }
 }
