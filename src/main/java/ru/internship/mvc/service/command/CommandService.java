@@ -47,11 +47,12 @@ public class CommandService {
                 throw new InputMismatchException("Incorrect input values");
             }
         } catch (ArrayIndexOutOfBoundsException exception) {
-            if (commandMap.containsKey(splitCommand[0])) {
-                commandMap.get(splitCommand[0]).execute();
-            } else {
-                throw new InputMismatchException("Incorrect input values");
-            }
+                if (commandMap.containsKey(splitCommand[0])) {
+                    commandMap.get(splitCommand[0]).execute();
+                } else {
+                    System.err.println("Incorrect input values");
+                    return "Incorrect input values";
+                }
         } catch (InputMismatchException exception) {
             System.err.println(exception.getMessage());
             return "Incorrect input values";
