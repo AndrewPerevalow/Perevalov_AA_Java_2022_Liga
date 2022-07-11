@@ -9,13 +9,21 @@ public class RemoveTaskCommand implements Command {
 
     private final TaskTracker taskTracker;
 
+    private int idTask;
+
     @Autowired
     public RemoveTaskCommand(TaskTracker taskTracker) {
         this.taskTracker = taskTracker;
     }
 
     @Override
-    public void execute(String... args) {
-        taskTracker.removeTask(Integer.parseInt(args[0]));
+    public void execute() {
+        taskTracker.removeTask(idTask);
+    }
+
+    @Override
+    public Command createCommand(String[] args) {
+        this.idTask = Integer.parseInt(args[0]);
+        return this;
     }
 }

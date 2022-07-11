@@ -15,7 +15,12 @@ public class CleanAllTaskTrackerCommand implements Command {
     }
 
     @Override
-    public void execute(String... args) {
+    public void execute() {
         taskTracker.cleanAllTaskTracker();
+    }
+
+    @Override
+    public Command createCommand(String[] args) {
+        return this;
     }
 }

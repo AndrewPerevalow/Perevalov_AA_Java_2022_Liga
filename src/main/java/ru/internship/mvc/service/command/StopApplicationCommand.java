@@ -15,7 +15,12 @@ public class StopApplicationCommand implements Command {
     }
 
     @Override
-    public void execute(String... args) {
+    public void execute() {
         taskTracker.stopApplication();
+    }
+
+    @Override
+    public Command createCommand(String[] args) {
+        return this;
     }
 }
