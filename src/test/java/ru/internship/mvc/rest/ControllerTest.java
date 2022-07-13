@@ -25,8 +25,8 @@ class ControllerTest {
     private TestRestTemplate restTemplate;
 
     @Nested
-    @DisplayName("Positive")
-    class Positive {
+    @DisplayName("Negative")
+    class Negative {
 
         @Test
         @DisplayName("Test invalid input command")
@@ -38,8 +38,8 @@ class ControllerTest {
     }
 
     @Nested
-    @DisplayName("Negative")
-    class Negative {
+    @DisplayName("Positive")
+    class Positive {
 
         @Test
         @DisplayName("Test valid input command")

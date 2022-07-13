@@ -1,42 +1,28 @@
 package ru.internship.mvc.service.command;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.InputMismatchException;
+import ru.internship.mvc.service.TaskTrackerImpl;
+import ru.internship.mvc.service.TaskTrackerInfoImpl;
+import ru.internship.mvc.service.UserTrackerImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 class CommandServiceTest {
 
-    @Mock
-    Command stopApplicationCommand;
-    @Mock
-    Command printAllTasksCommand;
-    @Mock
-    Command printAllFilterTasksCommand;
-    @Mock
-    Command changeTaskStatusCommand;
-    @Mock
-    Command addNewTaskCommand;
-    @Mock
-    Command removeTaskCommand;
-    @Mock
-    Command editTaskCommand;
-    @Mock
-    Command addNewUserCommand;
-    @Mock
-    Command removeUserCommand;
-    @Mock
-    Command cleanAllTaskTrackerCommand;
+    Command stopApplicationCommand = new StopApplicationCommand(Mockito.mock(TaskTrackerImpl.class));
+    Command printAllTasksCommand = new PrintAllTaskTrackerImplCommand(Mockito.mock(TaskTrackerInfoImpl.class));
+    Command printAllFilterTasksCommand = new FilterAllTasksForUsersByStatusCommand(Mockito.mock(TaskTrackerInfoImpl.class));
+    Command changeTaskStatusCommand = new ChangeTaskStatusCommand(Mockito.mock(TaskTrackerImpl.class));
+    Command addNewTaskCommand = new AddNewTaskCommand(Mockito.mock(TaskTrackerImpl.class));
+    Command removeTaskCommand = new RemoveTaskCommand(Mockito.mock(TaskTrackerImpl.class));
+    Command editTaskCommand = new EditTaskCommand(Mockito.mock(TaskTrackerImpl.class));
+    Command addNewUserCommand = new AddNewUserCommand(Mockito.mock(UserTrackerImpl.class));
+    Command removeUserCommand = new RemoveUserCommand(Mockito.mock(UserTrackerImpl.class));
+    Command cleanAllTaskTrackerCommand = new CleanAllTaskTrackerCommand(Mockito.mock(TaskTrackerImpl.class));
 
 
     private final CommandService commandService = new CommandService(stopApplicationCommand, printAllTasksCommand,
@@ -44,25 +30,20 @@ class CommandServiceTest {
             editTaskCommand, addNewUserCommand, removeUserCommand, cleanAllTaskTrackerCommand
     );
 
-    @BeforeEach
-    void setUp() {
-//        Mockito.when(commandService.executeCommand(anyString())).
+    @Nested
+    @DisplayName("Negative")
+    class Negative {
+
+        @Test
+        @DisplayName("Test invalid input command")
+        void getCommand_InvalidInput_ThrowInputMismatchException() {
+            assertEquals("Incorrect input values", commandService.executeCommand("anyString"));
+        }
     }
 
     @Nested
     @DisplayName("Positive")
     class Positive {
-
-        @Test
-        @DisplayName("Test invalid input command")
-        void getCommand_InvalidInput_ThrowInputMismatchException() {
-            assertEquals("Incorrect input values", commandService.executeCommand(anyString()));
-        }
-    }
-
-    @Nested
-    @DisplayName("Negative")
-    class Negative {
 
         @Test
         @DisplayName("Test valid input command")
