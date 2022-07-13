@@ -68,11 +68,11 @@ public class TaskTrackerInfoImpl implements TaskTrackerInfo {
     }
 
     @Override
-    public void printAllTasksForUsers(int idUser) {
+    public String printAllTasksForUsers(int idUser) {
         if (usersMap.containsKey(idUser)) {
             List<Task> listTasks = usersMap.get(idUser).getTasks();
             if (listTasks.size() != 0) {
-                System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
+                return listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", "");
             } else {
                 throw new InputMismatchException("This user doesn't have any tasks");
             }
@@ -82,7 +82,7 @@ public class TaskTrackerInfoImpl implements TaskTrackerInfo {
     }
 
     @Override
-    public void filterAllTasksForUsersByStatus(int idUser, String status) {
+    public String filterAllTasksForUsersByStatus(int idUser, String status) {
         if (usersMap.containsKey(idUser)) {
             List<Task> listTasks;
             if (status.equals(DEFAULT_STATUS) || status.equals(WORK_STATUS) || status.equals(COMPLETE_STATUS)) {
@@ -92,7 +92,7 @@ public class TaskTrackerInfoImpl implements TaskTrackerInfo {
                 throw new InputMismatchException("Incorrect status");
             }
             if (listTasks.size() != 0) {
-                System.out.println(listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", ""));
+                return listTasks.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\, ", "");
 
             } else {
                 throw new InputMismatchException("This user doesn't have tasks with this status");
