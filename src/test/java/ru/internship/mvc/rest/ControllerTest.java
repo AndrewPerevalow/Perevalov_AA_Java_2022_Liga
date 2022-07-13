@@ -46,7 +46,11 @@ class ControllerTest {
         void getCommand_ValidInput_Success() throws Exception {
             ResponseEntity<String> response = restTemplate.getForEntity(
                     new URL("http://localhost:" + port + "/cli?command=printall_withoutfilter 4").toString(), String.class);
-            assertEquals("Success, let's see result in console", response.getBody());
+            assertEquals("Задание: id = 5; Заголовок = 'Выполнить ДЗ'; Описание = 'Придумать и написать игру'; Срок выполения = Wed Jul 27 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
+                         "Задание: id = 6; Заголовок = 'Выполнить ДЗ'; Описание = 'Придумать и написать другую игру'; Срок выполения = Wed Jul 27 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
+                         "Задание: id = 7; Заголовок = 'Выполнить ДЗ'; Описание = 'Придумать и написать еще другую игру'; Срок выполения = Sat Aug 27 00:00:00 MSK 2022; Статус = 'Новое'.\n",
+                    response.getBody()
+            );
         }
     }
 }

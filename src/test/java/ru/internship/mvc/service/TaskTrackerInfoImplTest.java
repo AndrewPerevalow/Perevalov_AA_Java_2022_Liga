@@ -4,9 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.system.CapturedOutput;
-import org.springframework.boot.test.system.OutputCaptureExtension;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
 import ru.internship.mvc.repo.CSVReader;
@@ -18,11 +15,9 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@ExtendWith(OutputCaptureExtension.class)
 class TaskTrackerInfoImplTest {
 
     TaskTrackerInfoImpl taskTrackerInfo;
@@ -93,10 +88,11 @@ class TaskTrackerInfoImplTest {
 
             @Test
             @DisplayName("Test user with correct input")
-            void printAllTasksForUsers_CorrectInput_OutputTasks(CapturedOutput output) {
-                taskTrackerInfo.printAllTasksForUsers(1);
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Задание: id = 1; Заголовок = 'task1'; Описание = 'task desc1'; Срок выполения = Sat Sep 03 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
-                        "Задание: id = 2; Заголовок = 'task2'; Описание = 'task desc2'; Срок выполения = Sat Aug 20 00:00:00 MSK 2022; Статус = 'В работе'.");
+            void printAllTasksForUsers_CorrectInput_OutputTasks() {
+                assertEquals("Задание: id = 1; Заголовок = 'task1'; Описание = 'task desc1'; Срок выполения = Sat Sep 03 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
+                             "Задание: id = 2; Заголовок = 'task2'; Описание = 'task desc2'; Срок выполения = Sat Aug 20 00:00:00 MSK 2022; Статус = 'В работе'.\n",
+                        taskTrackerInfo.printAllTasksForUsers(1)
+                );
             }
         }
     }
@@ -139,23 +135,26 @@ class TaskTrackerInfoImplTest {
 
             @Test
             @DisplayName("Test user with correct new status")
-            void filterAllTasksForUsersByStatus_CorrectInputStatusNew_OutputTasks(CapturedOutput output) {
-                taskTrackerInfo.filterAllTasksForUsersByStatus(1, "Новое");
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Задание: id = 1; Заголовок = 'task1'; Описание = 'task desc1'; Срок выполения = Sat Sep 03 00:00:00 MSK 2022; Статус = 'Новое'.");
+            void filterAllTasksForUsersByStatus_CorrectInputStatusNew_OutputTasks() {
+                assertEquals("Задание: id = 1; Заголовок = 'task1'; Описание = 'task desc1'; Срок выполения = Sat Sep 03 00:00:00 MSK 2022; Статус = 'Новое'.\n",
+                        taskTrackerInfo.filterAllTasksForUsersByStatus(1, "Новое")
+                );
             }
 
             @Test
             @DisplayName("Test user with correct work status")
-            void filterAllTasksForUsersByStatus_CorrectInputStatusInWork_OutputTasks(CapturedOutput output) {
-                taskTrackerInfo.filterAllTasksForUsersByStatus(1, "В работе");
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Задание: id = 2; Заголовок = 'task2'; Описание = 'task desc2'; Срок выполения = Sat Aug 20 00:00:00 MSK 2022; Статус = 'В работе'.");
+            void filterAllTasksForUsersByStatus_CorrectInputStatusInWork_OutputTasks() {
+                assertEquals("Задание: id = 2; Заголовок = 'task2'; Описание = 'task desc2'; Срок выполения = Sat Aug 20 00:00:00 MSK 2022; Статус = 'В работе'.\n",
+                        taskTrackerInfo.filterAllTasksForUsersByStatus(1, "В работе")
+                );
             }
 
             @Test
             @DisplayName("Test user with correct complete status")
-            void filterAllTasksForUsersByStatus_CorrectInputStatusReady_OutputTasks(CapturedOutput output) {
-                taskTrackerInfo.filterAllTasksForUsersByStatus(3, "Готово");
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Задание: id = 6; Заголовок = 'task6'; Описание = 'task desc6'; Срок выполения = Sat Aug 06 00:00:00 MSK 2022; Статус = 'Готово'.");
+            void filterAllTasksForUsersByStatus_CorrectInputStatusReady_OutputTasks() {
+                assertEquals("Задание: id = 6; Заголовок = 'task6'; Описание = 'task desc6'; Срок выполения = Sat Aug 06 00:00:00 MSK 2022; Статус = 'Готово'.\n",
+                        taskTrackerInfo.filterAllTasksForUsersByStatus(3, "Готово")
+                );
             }
         }
     }

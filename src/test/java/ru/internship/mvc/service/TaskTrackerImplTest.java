@@ -1,10 +1,6 @@
 package ru.internship.mvc.service;
 
 import org.junit.jupiter.api.*;
-
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.system.CapturedOutput;
-import org.springframework.boot.test.system.OutputCaptureExtension;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
 import ru.internship.mvc.repo.CSVReader;
@@ -15,11 +11,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@ExtendWith(OutputCaptureExtension.class)
 class TaskTrackerImplTest {
 
     TaskTrackerImpl taskTracker;
@@ -111,38 +105,42 @@ class TaskTrackerImplTest {
 
             @Test
             @DisplayName("Test user id doesn't exist")
-            void addNewTask_UserNotExist_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "Task desc", 8, "20.09.2022"));
+            void addNewTask_UserNotExist_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("20.09.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "Task desc", 8, validDate));
                 assertEquals("User with this id doesn't exist", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input header")
-            void addNewTask_InvalidInputHeader_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("", "Task desc", 2, "20.09.2022"));
+            void addNewTask_InvalidInputHeader_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("20.09.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("", "Task desc", 2, validDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input description")
-            void addNewTask_InvalidInputDescription_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "", 2, "20.09.2022"));
+            void addNewTask_InvalidInputDescription_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("20.09.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "", 2, validDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input date")
-            void addNewTask_InvalidInputDate_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "Task desc", 2, "20.09.1998"));
+            void addNewTask_InvalidInputDate_ThrowInputMismatchException() throws ParseException {
+                Date invalidDate = new SimpleDateFormat("dd.MM.yyyy").parse("20.09.1998");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.addNewTask("Header", "Task desc", 2, invalidDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input date parse")
-            void addNewTask_InvalidInputDateParse_ErrorOutput(CapturedOutput output) {
-                String invalidDate = "20.09";
-                taskTracker.addNewTask("Header", "Task desc", 2, invalidDate);
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Parse fail: Unparseable date: " + invalidDate);
+            void addNewTask_InvalidInputDateParse_ErrorOutput() {
+                String invalidDate = "\"20.09\"";
+                Throwable exception = assertThrows(ParseException.class, () -> taskTracker.addNewTask("Header", "Task desc", 2, new SimpleDateFormat("dd.MM.yyyy").parse("20.09")));
+                assertEquals("Unparseable date: " + invalidDate, exception.getMessage());
             }
         }
 
@@ -155,7 +153,7 @@ class TaskTrackerImplTest {
             void addNewTask_ValidInput_AddedNewTask() throws ParseException {
                 List<Task> taskList = new ArrayList<>(tasksList);
                 taskTracker.setTasksList(taskList);
-                taskTracker.addNewTask("Header", "Task desc", 2, "20.09.2022");
+                taskTracker.addNewTask("Header", "Task desc", 2, new SimpleDateFormat("dd.MM.yyyy").parse("20.09.2022"));
                 assertEquals(7, taskTracker.getTasksList().size());
                 assertEquals("Header", taskTracker.getTasksList().get(6).getHeader());
                 assertEquals("Task desc", taskTracker.getTasksList().get(6).getDescription());
@@ -218,44 +216,49 @@ class TaskTrackerImplTest {
 
             @Test
             @DisplayName("Test user id doesn't exist")
-            void editTask_UserNotExist_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "Task desc", 9, "27.10.2022"));
+            void editTask_UserNotExist_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("27.10.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "Task desc", 9, validDate));
                 assertEquals("User with this id doesn't exist", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input header")
-            void editTask_InvalidInputHeader_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "", "Task desc", 2, "27.10.2022"));
+            void editTask_InvalidInputHeader_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("27.10.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "", "Task desc", 2, validDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input description")
-            void editTask_InvalidInputDescription_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "", 2, "27.10.2022"));
+            void editTask_InvalidInputDescription_ThrowInputMismatchException() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("27.10.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "", 2, validDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input date")
-            void editTask_InvalidInputDate_ThrowInputMismatchException() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "Task desc", 2, "20.09.1998"));
+            void editTask_InvalidInputDate_ThrowInputMismatchException() throws ParseException {
+                Date invalidDate = new SimpleDateFormat("dd.MM.yyyy").parse("20.09.1998");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(2, "Header", "Task desc", 2, invalidDate));
                 assertEquals("Incorrect input values", exception.getMessage());
             }
 
             @Test
             @DisplayName("Test invalid input date parse")
-            void editTask_InvalidInputDateParse_ErrorOutput(CapturedOutput output) {
-                String invalidDate = "adasf";
-                taskTracker.editTask(2, "Header", "Task desc", 2, invalidDate);
-                assertThat(output).isEqualToNormalizingPunctuationAndWhitespace("Parse fail: Unparseable date: " + invalidDate);
+            void editTask_InvalidInputDateParse_ErrorOutput() {
+                String invalidDate = "\"adasf\"";
+                Throwable exception = assertThrows(ParseException.class, () -> taskTracker.editTask(2, "Header", "Task desc", 2, new SimpleDateFormat("dd.MM.yyyy").parse("adasf")));
+                assertEquals("Unparseable date: " + invalidDate, exception.getMessage());
             }
 
             @Test
             @DisplayName("Test task id doesn't exist")
-            void editTask_InvalidId_ErrorOutput() {
-                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(12, "Header", "Task desc", 2, "27.10.2022"));
+            void editTask_InvalidId_ErrorOutput() throws ParseException {
+                Date validDate = new SimpleDateFormat("dd.MM.yyyy").parse("27.10.2022");
+                Throwable exception = assertThrows(InputMismatchException.class, () -> taskTracker.editTask(12, "Header", "Task desc", 2, validDate));
                 assertEquals("Task with this id doesn't exist", exception.getMessage());
             }
         }
@@ -269,7 +272,7 @@ class TaskTrackerImplTest {
             void editTask_ValidInput_EditedTask() throws ParseException {
                 List<Task> taskList = new ArrayList<>(tasksList);
                 taskTracker.setTasksList(taskList);
-                taskTracker.editTask(4, "New Header", "New task desc", 2, "29.10.2022");
+                taskTracker.editTask(4, "New Header", "New task desc", 2, new SimpleDateFormat("dd.MM.yyyy").parse("29.10.2022"));
                 assertEquals(6, taskTracker.getTasksList().size());
                 assertEquals("New Header", taskTracker.getTasksList().get(3).getHeader());
                 assertEquals("New task desc", taskTracker.getTasksList().get(3).getDescription());
