@@ -1,4 +1,4 @@
-package ru.internship.mvc.service.command;
+package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,21 +8,21 @@ import java.util.InputMismatchException;
 import java.util.Map;
 
 @Service
-public class CommandService {
+public class StrategyService {
 
-    private final Map<String, Command> commandMap;
+    private final Map<String, Strategy> commandMap;
 
     @Autowired
-    CommandService(@Qualifier("stop") Command stopApplicationCommand,
-                   @Qualifier("printall_withoutfilter") Command printAllTasksCommand,
-                   @Qualifier("printall_withfilter") Command printAllFilterTasksCommand,
-                   @Qualifier("changestatus") Command changeTaskStatusCommand,
-                   @Qualifier("addtask") Command addNewTaskCommand,
-                   @Qualifier("removetask") Command removeTaskCommand,
-                   @Qualifier("edittask") Command editTaskCommand,
-                   @Qualifier("adduser") Command addNewUserCommand,
-                   @Qualifier("removeuser") Command removeUserCommand,
-                   @Qualifier("cleanall") Command cleanAllTaskTrackerCommand) {
+    StrategyService(@Qualifier("stop") Strategy stopApplicationCommand,
+                    @Qualifier("printall_withoutfilter") Strategy printAllTasksCommand,
+                    @Qualifier("printall_withfilter") Strategy printAllFilterTasksCommand,
+                    @Qualifier("changestatus") Strategy changeTaskStatusCommand,
+                    @Qualifier("addtask") Strategy addNewTaskCommand,
+                    @Qualifier("removetask") Strategy removeTaskCommand,
+                    @Qualifier("edittask") Strategy editTaskCommand,
+                    @Qualifier("adduser") Strategy addNewUserCommand,
+                    @Qualifier("removeuser") Strategy removeUserCommand,
+                    @Qualifier("cleanall") Strategy cleanAllTaskTrackerCommand) {
 
         commandMap = Map.of("stop", stopApplicationCommand,
                             "printall_withoutfilter", printAllTasksCommand,
@@ -42,13 +42,13 @@ public class CommandService {
         try {
             String[] args = splitCommand[1].split(",");
             if (commandMap.containsKey(splitCommand[0])) {
-                commandMap.get(splitCommand[0]).createCommand(args).execute();
+               return commandMap.get(splitCommand[0]).execute(args);
             } else {
                 throw new InputMismatchException("Incorrect input values");
             }
         } catch (ArrayIndexOutOfBoundsException exception) {
             if (commandMap.containsKey(splitCommand[0])) {
-                commandMap.get(splitCommand[0]).execute();
+               return commandMap.get(splitCommand[0]).execute();
             } else {
                 throw new InputMismatchException("Incorrect input values");
             }
@@ -56,6 +56,5 @@ public class CommandService {
             System.err.println(exception.getMessage());
             return "Incorrect input values";
         }
-        return "Success, let's see result in console";
     }
 }

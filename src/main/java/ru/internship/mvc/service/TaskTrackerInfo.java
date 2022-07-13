@@ -1,6 +1,6 @@
 package ru.internship.mvc.service;
 
 public interface TaskTrackerInfo {
-    void printAllTasksForUsers(int idUser);
-    void filterAllTasksForUsersByStatus(int idUser, String status);
+    String printAllTasksForUsers(int idUser);
+    String filterAllTasksForUsersByStatus(int idUser, String status);
 }
