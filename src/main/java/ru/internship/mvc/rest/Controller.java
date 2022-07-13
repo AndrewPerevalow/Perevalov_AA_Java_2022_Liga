@@ -4,20 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.internship.mvc.service.command.CommandService;
+import ru.internship.mvc.service.strategy.StrategyService;
 
 @RestController
 public class Controller {
 
-    private final CommandService commandService;
+    private final StrategyService strategyService;
 
     @Autowired
-    Controller(CommandService commandService) {
-        this.commandService = commandService;
+    Controller(StrategyService strategyService) {
+        this.strategyService = strategyService;
     }
 
     @GetMapping("/cli")
     public String getCommand(@RequestParam String command) {
-        return commandService.executeCommand(command);
+        return strategyService.executeCommand(command);
     }
 }

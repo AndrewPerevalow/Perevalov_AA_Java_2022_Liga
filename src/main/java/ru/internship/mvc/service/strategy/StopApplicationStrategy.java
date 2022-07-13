@@ -1,26 +1,22 @@
-package ru.internship.mvc.service.command;
+package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.internship.mvc.service.TaskTracker;
 
 @Service("stop")
-public class StopApplicationCommand implements Command {
+public class StopApplicationStrategy implements Strategy {
 
     private final TaskTracker taskTracker;
 
     @Autowired
-    public StopApplicationCommand(TaskTracker taskTracker) {
+    public StopApplicationStrategy(TaskTracker taskTracker) {
         this.taskTracker = taskTracker;
     }
 
     @Override
-    public void execute() {
+    public String execute(String...args) {
         taskTracker.stopApplication();
-    }
-
-    @Override
-    public Command createCommand(String[] args) {
-        return this;
+        return null;
     }
 }

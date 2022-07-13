@@ -44,22 +44,22 @@ public class UserTrackerImpl implements UserTracker {
     }
 
     @Override
-    public void addNewUser(String userName) {
+    public String addNewUser(String userName) {
         if (isNameValid(userName)) {
             usersMap.put(usersMap.size() + 1, new User(usersMap.size() + 1, userName, new ArrayList<>()));
             csvWriter.writeUsers(userFile, usersMap);
-            System.out.println("New user added");
+            return "New user added";
         } else {
             throw new InputMismatchException("Incorrect user name");
         }
     }
 
     @Override
-    public void removeUser(int idUser) {
+    public String removeUser(int idUser) {
         if (usersMap.containsKey(idUser)) {
             usersMap.remove(idUser);
             csvWriter.writeUsers(userFile, usersMap);
-            System.out.println("User deleted");
+            return "User deleted";
         } else {
             throw new InputMismatchException("User with this id doesn't exist");
         }
