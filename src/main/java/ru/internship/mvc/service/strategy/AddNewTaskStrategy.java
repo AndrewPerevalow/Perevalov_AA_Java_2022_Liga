@@ -1,8 +1,10 @@
 package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.TaskTracker;
+import ru.internship.mvc.model.Task;
+import ru.internship.mvc.service.TaskService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,21 +13,37 @@ import java.util.Date;
 @Service("addtask")
 public class AddNewTaskStrategy implements Strategy {
 
-    private final TaskTracker taskTracker;
+    private static String DEFAULT_STATUS;
+
+    @Value("${statuses.default-status}")
+    public void setDefaultStatus(String status) {
+        AddNewTaskStrategy.DEFAULT_STATUS = status;
+    }
+
+    private final TaskService taskService;
 
     @Autowired
-    public AddNewTaskStrategy(TaskTracker taskTracker) {
-        this.taskTracker = taskTracker;
+    public AddNewTaskStrategy(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @Override
-    public String execute(String...args) {
-        Date dateDeadline = null;
+    public String execute(String... args) {
+        String header = args[0];
+        String description = args[1];
+        Long idUser = Long.parseLong(args[2]);
+        Date deadline;
         try {
-            dateDeadline = new SimpleDateFormat("dd.MM.yyyy").parse(args[3]);
+            deadline = new SimpleDateFormat("yyyy-MM-dd").parse(args[3]);
         } catch (ParseException exception) {
-            System.err.println("Parse fail: " + exception.getMessage());
+            return "Parse fail: " + exception.getMessage();
         }
-        return taskTracker.addNewTask(args[0], args[1], Integer.parseInt(args[2]), dateDeadline);
+        Task newTask = new Task();
+        newTask.setHeader(header);
+        newTask.setDescription(description);
+        newTask.setIdUser(idUser);
+        newTask.setDeadline(deadline);
+        newTask.setStatus(DEFAULT_STATUS);
+        return "Added task: " + taskService.addNewTask(newTask).toString();
     }
 }

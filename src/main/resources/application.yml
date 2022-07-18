@@ -1,3 +1,12 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    username: andrey
+    password: pass
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5400/database1
 statuses:
   default-status: Новое
   work-status: В работе

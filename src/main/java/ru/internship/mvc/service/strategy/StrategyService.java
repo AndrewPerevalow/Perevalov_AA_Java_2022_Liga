@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.InputMismatchException;
 import java.util.Map;
 
@@ -13,16 +14,16 @@ public class StrategyService {
     private final Map<String, Strategy> commandMap;
 
     @Autowired
-    StrategyService(@Qualifier("stop") Strategy stopApplicationStrategy,
-                    @Qualifier("printall_withoutfilter") Strategy printAllTasksStrategy,
-                    @Qualifier("printall_withfilter") Strategy printAllFilterTasksStrategy,
-                    @Qualifier("changestatus") Strategy changeTaskStatusStrategy,
-                    @Qualifier("addtask") Strategy addNewTaskStrategy,
-                    @Qualifier("removetask") Strategy removeTaskStrategy,
-                    @Qualifier("edittask") Strategy editTaskStrategy,
-                    @Qualifier("adduser") Strategy addNewUserStrategy,
-                    @Qualifier("removeuser") Strategy removeUserStrategy,
-                    @Qualifier("cleanall") Strategy cleanAllTaskTrackerStrategy) {
+    public StrategyService(@Qualifier("stop") Strategy stopApplicationStrategy,
+                           @Qualifier("printall_withoutfilter") Strategy printAllTasksStrategy,
+                           @Qualifier("printall_withfilter") Strategy printAllFilterTasksStrategy,
+                           @Qualifier("changestatus") Strategy changeTaskStatusStrategy,
+                           @Qualifier("addtask") Strategy addNewTaskStrategy,
+                           @Qualifier("removetask") Strategy removeTaskStrategy,
+                           @Qualifier("edittask") Strategy editTaskStrategy,
+                           @Qualifier("adduser") Strategy addNewUserStrategy,
+                           @Qualifier("removeuser") Strategy removeUserStrategy,
+                           @Qualifier("cleanall") Strategy cleanAllTaskTrackerStrategy) {
 
         commandMap = Map.of("stop", stopApplicationStrategy,
                             "printall_withoutfilter", printAllTasksStrategy,
@@ -52,9 +53,8 @@ public class StrategyService {
             } else {
                 return "Incorrect input values";
             }
-        } catch (InputMismatchException exception) {
-            System.err.println(exception.getMessage());
-            return "Incorrect input values";
+        } catch (InputMismatchException | EntityNotFoundException exception) {
+            return exception.getMessage();
         }
     }
 }

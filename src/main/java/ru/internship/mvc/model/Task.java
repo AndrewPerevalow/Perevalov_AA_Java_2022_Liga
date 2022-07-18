@@ -1,20 +1,37 @@
 package ru.internship.mvc.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "tasks")
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Task {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Header should not be empty")
     private String header;
+
+    @NotBlank(message = "Description should not be empty")
     private String description;
-    private int idUser;
+
+    @Column(name = "id_user")
+    private Long idUser;
+
+    @NotBlank(message = "Date should not be empty")
     private Date deadline;
+
+    @NotBlank(message = "Status should not be empty")
     private String status;
 
     @Override

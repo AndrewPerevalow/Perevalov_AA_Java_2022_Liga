@@ -2,21 +2,21 @@ package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.TaskTracker;
+import ru.internship.mvc.service.TaskService;
 
 @Service("stop")
 public class StopApplicationStrategy implements Strategy {
 
-    private final TaskTracker taskTracker;
+    private final TaskService taskService;
 
     @Autowired
-    public StopApplicationStrategy(TaskTracker taskTracker) {
-        this.taskTracker = taskTracker;
+    public StopApplicationStrategy(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @Override
     public String execute(String...args) {
-        taskTracker.stopApplication();
+        taskService.stopApplication();
         return null;
     }
 }
