@@ -2,7 +2,7 @@ package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.TaskTracker;
+import ru.internship.mvc.service.TaskService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,21 +11,25 @@ import java.util.Date;
 @Service("edittask")
 public class EditTaskStrategy implements Strategy {
 
-    private final TaskTracker taskTracker;
+    private final TaskService taskService;
 
     @Autowired
-    public EditTaskStrategy(TaskTracker taskTracker) {
-        this.taskTracker = taskTracker;
+    public EditTaskStrategy(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @Override
-    public String execute(String...args) {
-        Date dateDeadline = null;
+    public String execute(String... args) {
+        Long id = Long.parseLong(args[0]);
+        String header = args[1];
+        String description = args[2];
+        Long idUser = Long.parseLong(args[3]);
+        Date deadline;
         try {
-            dateDeadline = new SimpleDateFormat("dd.MM.yyyy").parse(args[4]);
+            deadline = new SimpleDateFormat("yyyy-MM-dd").parse(args[4]);
         } catch (ParseException exception) {
-            System.err.println("Parse fail: " + exception.getMessage());
+            return "Parse fail: " + exception.getMessage();
         }
-        return taskTracker.editTask(Integer.parseInt(args[0]), args[1], args[2], Integer.parseInt(args[3]), dateDeadline);
+        return taskService.editTask(id, header, description, idUser, deadline);
     }
 }

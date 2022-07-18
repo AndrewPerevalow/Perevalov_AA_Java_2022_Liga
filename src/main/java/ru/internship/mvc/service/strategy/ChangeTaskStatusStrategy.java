@@ -2,21 +2,23 @@ package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.TaskTracker;
+import ru.internship.mvc.service.TaskService;
 
 @Service("changestatus")
 public class ChangeTaskStatusStrategy implements Strategy {
 
-    private final TaskTracker taskTracker;
+    private final TaskService taskService;
 
     @Autowired
-    public ChangeTaskStatusStrategy(TaskTracker taskTracker) {
-        this.taskTracker = taskTracker;
+    public ChangeTaskStatusStrategy(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @Override
-    public String execute(String...args) {
-        return taskTracker.changeTaskStatus(Integer.parseInt(args[0]), args[1]);
+    public String execute(String... args) {
+        Long idTask = Long.parseLong(args[0]);
+        String newStatus = args[1];
+        return taskService.changeTaskStatus(idTask, newStatus);
     }
 }
 
