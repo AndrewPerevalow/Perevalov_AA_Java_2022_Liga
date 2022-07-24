@@ -1,9 +1,7 @@
 package ru.internship.mvc.service.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.model.Task;
 import ru.internship.mvc.service.TaskService;
 
 import java.text.ParseException;
@@ -12,13 +10,6 @@ import java.util.Date;
 
 @Service("addtask")
 public class AddNewTaskStrategy implements Strategy {
-
-    private static String DEFAULT_STATUS;
-
-    @Value("${statuses.default-status}")
-    public void setDefaultStatus(String status) {
-        AddNewTaskStrategy.DEFAULT_STATUS = status;
-    }
 
     private final TaskService taskService;
 
@@ -38,12 +29,6 @@ public class AddNewTaskStrategy implements Strategy {
         } catch (ParseException exception) {
             return "Parse fail: " + exception.getMessage();
         }
-        Task newTask = new Task();
-        newTask.setHeader(header);
-        newTask.setDescription(description);
-        newTask.setIdUser(idUser);
-        newTask.setDeadline(deadline);
-        newTask.setStatus(DEFAULT_STATUS);
-        return "Added task: " + taskService.addNewTask(newTask).toString();
+        return "Added task: " + taskService.addNewTask(header, description, idUser, deadline).toString();
     }
 }

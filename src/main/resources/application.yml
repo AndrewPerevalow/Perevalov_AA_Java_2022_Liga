@@ -1,7 +1,14 @@
 spring:
+  flyway:
+    user: andrey
+    password: pass
+    schemas: database1
+    url: jdbc:postgresql://localhost:5400/database1
+    locations: classpath:db/migration
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
   datasource:
     username: andrey
     password: pass
@@ -11,6 +18,3 @@ statuses:
   default-status: Новое
   work-status: В работе
   complete-status: Готово
-files:
-  user-file: users.csv
-  task-file: tasks.csv

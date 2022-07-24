@@ -12,6 +12,7 @@ import java.util.Map;
 public class StrategyService {
 
     private final Map<String, Strategy> commandMap;
+    private final Strategy findByMaxTasksCountStrategy;
 
     @Autowired
     public StrategyService(@Qualifier("stop") Strategy stopApplicationStrategy,
@@ -23,7 +24,8 @@ public class StrategyService {
                            @Qualifier("edittask") Strategy editTaskStrategy,
                            @Qualifier("adduser") Strategy addNewUserStrategy,
                            @Qualifier("removeuser") Strategy removeUserStrategy,
-                           @Qualifier("cleanall") Strategy cleanAllTaskTrackerStrategy) {
+                           @Qualifier("cleanall") Strategy cleanAllTaskTrackerStrategy,
+                           @Qualifier("find_user_by_max_count_tasks") Strategy findByMaxTasksCountStrategy) {
 
         commandMap = Map.of("stop", stopApplicationStrategy,
                             "printall_withoutfilter", printAllTasksStrategy,
@@ -36,6 +38,7 @@ public class StrategyService {
                             "removeuser", removeUserStrategy,
                             "cleanall", cleanAllTaskTrackerStrategy
         );
+        this.findByMaxTasksCountStrategy = findByMaxTasksCountStrategy;
     }
 
     public String executeCommand(String command) {
@@ -53,6 +56,14 @@ public class StrategyService {
             } else {
                 return "Incorrect input values";
             }
+        } catch (InputMismatchException | EntityNotFoundException exception) {
+            return exception.getMessage();
+        }
+    }
+
+    public String executeFind(String status, String dateInterval) {
+        try {
+            return findByMaxTasksCountStrategy.execute(status, dateInterval);
         } catch (InputMismatchException | EntityNotFoundException exception) {
             return exception.getMessage();
         }

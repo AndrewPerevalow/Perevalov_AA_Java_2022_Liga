@@ -18,7 +18,8 @@ public class ChangeTaskStatusStrategy implements Strategy {
     public String execute(String... args) {
         Long idTask = Long.parseLong(args[0]);
         String newStatus = args[1];
-        return taskService.changeTaskStatus(idTask, newStatus);
+        taskService.changeTaskStatus(idTask, newStatus);
+        return "Status task id = "+ idTask + " changed to: " + newStatus;
     }
 }
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.internship.mvc.model.Task;
+import ru.internship.mvc.model.User;
 import ru.internship.mvc.repo.TaskRepo;
 import ru.internship.mvc.repo.UserRepo;
 
@@ -45,11 +46,17 @@ public class TaskService {
         this.userRepo = userRepo;
     }
 
-    public Task addNewTask(Task task) {
-        userRepo.findById(task.getIdUser())
+    public Task addNewTask(String header, String description, Long idUser, Date deadline) {
+        User user = userRepo.findById(idUser)
                 .orElseThrow(() -> new EntityNotFoundException("User with this id doesn't exist"));
-        if (isValidInput(task.getHeader(), task.getDescription(), task.getDeadline())) {
-            return taskRepo.save(task);
+        if (isValidInput(header, description, deadline)) {
+            Task newTask = new Task();
+            newTask.setHeader(header);
+            newTask.setDescription(description);
+            newTask.setUser(user);
+            newTask.setDeadline(deadline);
+            newTask.setStatus(DEFAULT_STATUS);
+            return taskRepo.save(newTask);
         } else {
             throw new InputMismatchException("Incorrect input values");
         }
@@ -62,33 +69,31 @@ public class TaskService {
         return "Task: " + idTask + " deleted";
     }
 
-    public String changeTaskStatus(Long idTask, String newStatus) {
+    public Task changeTaskStatus(Long idTask, String newStatus) {
         Task task = taskRepo.findById(idTask)
                 .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
         if (newStatus.equals(DEFAULT_STATUS) || newStatus.equals(WORK_STATUS) || newStatus.equals(COMPLETE_STATUS)) {
             task.setStatus(newStatus);
-            taskRepo.save(task);
+            return taskRepo.save(task);
         } else {
             throw new InputMismatchException("Incorrect status");
         }
-        return "Status task id = "+ idTask + " changed to: " + newStatus;
     }
 
-    public String editTask(Long idTask, String header, String description, Long idUser, Date deadline) {
-        userRepo.findById(idUser)
+    public Task editTask(Long idTask, String header, String description, Long idUser, Date deadline) {
+        User user = userRepo.findById(idUser)
                 .orElseThrow(() -> new EntityNotFoundException("User with this id doesn't exist"));
         Task task = taskRepo.findById(idTask)
                 .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
         if (isValidInput(header, description, deadline)) {
             task.setHeader(header);
             task.setDescription(description);
-            task.setIdUser(idUser);
+            task.setUser(user);
             task.setDeadline(deadline);
-            taskRepo.save(task);
+            return taskRepo.save(task);
         } else {
             throw new InputMismatchException("Incorrect input values");
         }
-        return "Task: " + idTask + " edited";
     }
 
     public String cleanAllTaskTracker() {

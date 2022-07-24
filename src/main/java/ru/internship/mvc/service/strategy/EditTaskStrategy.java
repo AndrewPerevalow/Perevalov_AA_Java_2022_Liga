@@ -30,6 +30,7 @@ public class EditTaskStrategy implements Strategy {
         } catch (ParseException exception) {
             return "Parse fail: " + exception.getMessage();
         }
-        return taskService.editTask(id, header, description, idUser, deadline);
+        taskService.editTask(id, header, description, idUser, deadline);
+        return "Task: " + id + " edited";
     }
 }
