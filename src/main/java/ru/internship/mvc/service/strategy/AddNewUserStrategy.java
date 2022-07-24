@@ -20,6 +20,7 @@ public class AddNewUserStrategy implements Strategy {
         String name = args[0];
         User newUser = new User();
         newUser.setName(name);
-        return userService.addNewUser(newUser);
+        userService.addNewUser(newUser);
+        return "New user: " + name + " saved";
     }
 }

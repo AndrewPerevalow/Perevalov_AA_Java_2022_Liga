@@ -25,8 +25,9 @@ public class Task {
     @NotBlank(message = "Description should not be empty")
     private String description;
 
-    @Column(name = "id_user")
-    private Long idUser;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 
     @NotBlank(message = "Date should not be empty")
     private Date deadline;

@@ -24,7 +24,6 @@ public class User {
     @Pattern(regexp = "[A-Za-zА-Яа-я]{3,29}", message = "Wrong name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 }
