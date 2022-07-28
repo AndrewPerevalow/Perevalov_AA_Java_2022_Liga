@@ -7,10 +7,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ru.internship.mvc.dto.UserFindMaxTasksDTO;
+import ru.internship.mvc.model.Project;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
+import ru.internship.mvc.repo.ProjectRepo;
+import ru.internship.mvc.repo.TaskRepo;
+import ru.internship.mvc.repo.UserRepo;
 import ru.internship.mvc.service.TaskInfoService;
 import ru.internship.mvc.service.TaskService;
+import ru.internship.mvc.service.UserInfoService;
 import ru.internship.mvc.service.UserService;
 import ru.internship.mvc.service.strategy.*;
 
@@ -18,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -30,27 +36,38 @@ class StrategyServiceTest {
     TaskService taskService;
     @Mock
     UserService userService;
+    @Mock
+    UserInfoService userInfoService;
+    @Mock
+    UserRepo userRepo;
+    @Mock
+    ProjectRepo projectRepo;
+    @Mock
+    TaskRepo taskRepo;
 
     List<Task> taskList;
     List<User> userList;
     UserFindMaxTasksDTO userFindMaxTasksDTO;
+    Project project;
 
     {
         try {
-            userList = List.of(new User(1L, "testName1", new ArrayList<>()),
-                               new User(2L, "testName2", new ArrayList<>()),
-                               new User(3L, "testName2", new ArrayList<>())
+            userList = List.of(new User(1L, "testName1", "testSurname1", "testPatronymic1", "testLogin1", "testEmail@mail.com1", "testPassword1", new ArrayList<>(), new ArrayList<>()),
+                               new User(2L, "testName2", "testSurname2", "testPatronymic2", "testLogin2", "testEmail@mail.com2", "testPassword2", new ArrayList<>(), new ArrayList<>()),
+                               new User(3L, "testName3", "testSurname3", "testPatronymic3", "testLogin3", "testEmail@mail.com3", "testPassword3", new ArrayList<>(), new ArrayList<>())
             );
-            taskList = List.of(new Task(1L, "task1", "task desc1", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-09-03"), "Новое"),
-                    new Task(2L, "task2", "task desc2", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-20"), "В работе"),
-                    new Task(3L, "task3", "task desc3", userList.get(1), new SimpleDateFormat("yyyy-MM-dd").parse("2022-09-21"), "Новое"),
-                    new Task(4L, "task4", "task desc4", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-28"), "Новое"),
-                    new Task(5L, "task5", "task desc5", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-16"), "Новое"),
-                    new Task(6L, "task6", "task desc6", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-06"), "Готово")
+            taskList = List.of(new Task(1L, "task1", "task desc1", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-09-03"), "Новое", new ArrayList<>(), new Project()),
+                    new Task(2L, "task2", "task desc2", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-20"), "В работе", new ArrayList<>(), new Project()),
+                    new Task(3L, "task3", "task desc3", userList.get(1), new SimpleDateFormat("yyyy-MM-dd").parse("2022-09-21"), "Новое", new ArrayList<>(), new Project()),
+                    new Task(4L, "task4", "task desc4", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-28"), "Новое", new ArrayList<>(), new Project()),
+                    new Task(5L, "task5", "task desc5", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-16"), "Новое", new ArrayList<>(), new Project()),
+                    new Task(6L, "task6", "task desc6", userList.get(2), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-06"), "Готово", new ArrayList<>(), new Project())
             );
             userList.get(0).setTasks(taskList.subList(0,1));
             userList.get(0).setTasks(taskList.subList(2,2));
             userList.get(0).setTasks(taskList.subList(3,5));
+
+            project = new Project(1L, "header", "desc", userList, taskList);
 
             userFindMaxTasksDTO = new UserFindMaxTasksDTO();
         } catch (ParseException e) {
@@ -67,14 +84,17 @@ class StrategyServiceTest {
                         .filter(task -> task.getStatus().equals("Новое")).toList()
                 );
         Mockito.when(taskService.changeTaskStatus(anyLong(), anyString())).thenReturn(taskList.get(1));
-        Mockito.when(taskService.addNewTask(anyString(), anyString(), anyLong(), any())).thenReturn(taskList.get(0));
+        Mockito.when(taskService.addNewTask(anyLong(), anyLong(), any(Task.class))).thenReturn(taskList.get(0));
         Mockito.when(taskService.removeTask(anyLong())).thenReturn("Task removed");
-        Mockito.when(taskService.editTask(anyLong(), anyString(), anyString(), anyLong(), any())).thenReturn(taskList.get(2));
-        Mockito.when(userService.addNewUser(any(User.class))).thenReturn(userList.get(0));
+        Mockito.when(taskService.editTask(anyLong(), anyLong(), anyLong(), any(Task.class))).thenReturn(taskList.get(2));
+        Mockito.when(userService.addNewUser(anyLong(), any(User.class))).thenReturn(userList.get(0));
         Mockito.when(userService.removeUser(anyLong())).thenReturn("User removed");
         Mockito.when(taskService.cleanAllTaskTracker()).thenReturn("All clean");
+        Mockito.when(projectRepo.findById(anyLong())).thenReturn(Optional.ofNullable(project));
+        Mockito.when(taskRepo.findById(anyLong())).thenReturn(Optional.ofNullable(taskList.get(2)));
+        Mockito.when(userRepo.findById(anyLong())).thenReturn(Optional.ofNullable(userList.get(2)));
         try {
-            Mockito.when(userService.findByMaxTasksCount(anyString(),any(),any())).thenReturn(userFindMaxTasksDTO);
+            Mockito.when(userInfoService.findByMaxTasksCount(anyString(),any(),any())).thenReturn(userFindMaxTasksDTO);
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -85,13 +105,13 @@ class StrategyServiceTest {
     Strategy printAllTasksStrategy = new PrintAllTaskTrackerImplStrategy(taskInfoService);
     Strategy printAllFilterTasksStrategy = new FilterAllTasksForUsersByStatusStrategy(taskInfoService);
     Strategy changeTaskStatusStrategy = new ChangeTaskStatusStrategy(taskService);
-    Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService);
+    Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService, userRepo, projectRepo);
     Strategy removeTaskStrategy = new RemoveTaskStrategy(taskService);
-    Strategy editTaskStrategy = new EditTaskStrategy(taskService);
-    Strategy addNewUserStrategy = new AddNewUserStrategy(userService);
+    Strategy editTaskStrategy = new EditTaskStrategy(taskService, taskRepo, userRepo, projectRepo);
+    Strategy addNewUserStrategy = new AddNewUserStrategy(userService, projectRepo);
     Strategy removeUserStrategy = new RemoveUserStrategy(userService);
     Strategy cleanAllTaskTrackerStrategy = new CleanAllTaskTrackerStrategy(taskService);
-    Strategy findByMaxTasksCountStrategy = new FindByMaxTasksCountStrategy(userService);
+    Strategy findByMaxTasksCountStrategy = new FindByMaxTasksCountStrategy(userInfoService);
 
 
     private final StrategyService strategyService = new StrategyService(stopApplicationStrategy, printAllTasksStrategy,
@@ -118,17 +138,21 @@ class StrategyServiceTest {
         @Test
         @DisplayName("Test valid input command: printall_withoutfilter")
         void getCommand_ValidInput_PrintAllWithoutFilter() {
-            assertEquals("Задание: id = 4; Заголовок = 'task4'; Описание = 'task desc4'; Срок выполения = Sun Aug 28 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
-                         "Задание: id = 5; Заголовок = 'task5'; Описание = 'task desc5'; Срок выполения = Tue Aug 16 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
-                         "Задание: id = 6; Заголовок = 'task6'; Описание = 'task desc6'; Срок выполения = Sat Aug 06 00:00:00 MSK 2022; Статус = 'Готово'.\n",
+            assertEquals("""
+                            Задание: id = 4; Заголовок = 'task4'; Описание = 'task desc4'; Срок выполения = Sun Aug 28 00:00:00 MSK 2022; Статус = 'Новое'.
+                            Задание: id = 5; Заголовок = 'task5'; Описание = 'task desc5'; Срок выполения = Tue Aug 16 00:00:00 MSK 2022; Статус = 'Новое'.
+                            Задание: id = 6; Заголовок = 'task6'; Описание = 'task desc6'; Срок выполения = Sat Aug 06 00:00:00 MSK 2022; Статус = 'Готово'.
+                            """,
                     strategyService.executeCommand("printall_withoutfilter 3"));
         }
 
         @Test
         @DisplayName("Test valid input command: printall_withfilter")
         void getCommand_ValidInput_PrintAllWithFilter() {
-            assertEquals("Задание: id = 4; Заголовок = 'task4'; Описание = 'task desc4'; Срок выполения = Sun Aug 28 00:00:00 MSK 2022; Статус = 'Новое'.\n" +
-                         "Задание: id = 5; Заголовок = 'task5'; Описание = 'task desc5'; Срок выполения = Tue Aug 16 00:00:00 MSK 2022; Статус = 'Новое'.\n",
+            assertEquals("""
+                            Задание: id = 4; Заголовок = 'task4'; Описание = 'task desc4'; Срок выполения = Sun Aug 28 00:00:00 MSK 2022; Статус = 'Новое'.
+                            Задание: id = 5; Заголовок = 'task5'; Описание = 'task desc5'; Срок выполения = Tue Aug 16 00:00:00 MSK 2022; Статус = 'Новое'.
+                            """,
                     strategyService.executeCommand("printall_withfilter 3,Новое"));
         }
 
@@ -142,7 +166,7 @@ class StrategyServiceTest {
         @DisplayName("Test valid input command: addtask")
         void getCommand_ValidInput_AddTask() {
             assertEquals("Added task: Задание: id = 1; Заголовок = 'task1'; Описание = 'task desc1'; Срок выполения = Sat Sep 03 00:00:00 MSK 2022; Статус = 'Новое'.\n",
-                    strategyService.executeCommand("addtask header,desc,4,2022-09-20"));
+                    strategyService.executeCommand("addtask header,desc,3,2022-09-20,2"));
         }
 
         @Test
@@ -154,13 +178,13 @@ class StrategyServiceTest {
         @Test
         @DisplayName("Test valid input command: edittask")
         void getCommand_ValidInput_EditTask() {
-            assertEquals("Task: 4 edited", strategyService.executeCommand("edittask 4,header,desc,4,2022-09-20"));
+            assertEquals("Task: 4 edited", strategyService.executeCommand("edittask 4,header,desc,2,2022-09-20,2"));
         }
 
         @Test
         @DisplayName("Test valid input command: adduser")
         void getCommand_ValidInput_AddUser() {
-            assertEquals("New user: Andy saved", strategyService.executeCommand("adduser Andy"));
+            assertEquals("New user: Andy saved", strategyService.executeCommand("adduser Andy,Surname,Patronymic,Login,Email,Password,1"));
         }
 
         @Test

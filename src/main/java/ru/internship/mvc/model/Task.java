@@ -1,10 +1,13 @@
 package ru.internship.mvc.model;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -19,21 +22,32 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Header should not be empty")
+    @NotEmpty(message = "Header should not be empty")
     private String header;
 
-    @NotBlank(message = "Description should not be empty")
+    @NotEmpty(message = "Description should not be empty")
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 
-    @NotBlank(message = "Date should not be empty")
+    @NotEmpty(message = "Date should not be empty")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date deadline;
 
-    @NotBlank(message = "Status should not be empty")
+    @NotEmpty(message = "Status should not be empty")
     private String status;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "task")
+    private List<Comment> commentList;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "id_project")
+    private Project project;
 
     @Override
     public String toString() {

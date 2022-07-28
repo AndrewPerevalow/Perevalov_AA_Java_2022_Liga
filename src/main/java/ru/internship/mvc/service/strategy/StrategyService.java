@@ -3,6 +3,7 @@ package ru.internship.mvc.service.strategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.internship.mvc.util.ParseCommand;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.InputMismatchException;
@@ -27,32 +28,28 @@ public class StrategyService {
                            @Qualifier("cleanall") Strategy cleanAllTaskTrackerStrategy,
                            @Qualifier("find_user_by_max_count_tasks") Strategy findByMaxTasksCountStrategy) {
 
-        commandMap = Map.of("stop", stopApplicationStrategy,
-                            "printall_withoutfilter", printAllTasksStrategy,
-                            "printall_withfilter", printAllFilterTasksStrategy,
-                            "changestatus", changeTaskStatusStrategy,
-                            "addtask", addNewTaskStrategy,
-                            "removetask", removeTaskStrategy,
-                            "edittask", editTaskStrategy,
-                            "adduser", addNewUserStrategy,
-                            "removeuser", removeUserStrategy,
-                            "cleanall", cleanAllTaskTrackerStrategy
+        commandMap = Map.of
+        (
+                StopApplicationStrategy.getCommand(), stopApplicationStrategy,
+                PrintAllTaskTrackerImplStrategy.getCommand(), printAllTasksStrategy,
+                FilterAllTasksForUsersByStatusStrategy.getCommand(), printAllFilterTasksStrategy,
+                ChangeTaskStatusStrategy.getCommand(), changeTaskStatusStrategy,
+                AddNewTaskStrategy.getCommand(), addNewTaskStrategy,
+                RemoveTaskStrategy.getCommand(), removeTaskStrategy,
+                EditTaskStrategy.getCommand(), editTaskStrategy,
+                AddNewUserStrategy.getCommand(), addNewUserStrategy,
+                RemoveUserStrategy.getCommand(), removeUserStrategy,
+                CleanAllTaskTrackerStrategy.getCommand(), cleanAllTaskTrackerStrategy
         );
         this.findByMaxTasksCountStrategy = findByMaxTasksCountStrategy;
     }
 
-    public String executeCommand(String command) {
-        String[] splitCommand = command.split(" ", 2);
+    public String executeCommand(String input) {
         try {
-            String[] args = splitCommand[1].split(",");
-            if (commandMap.containsKey(splitCommand[0])) {
-                return commandMap.get(splitCommand[0]).execute(args);
-            } else {
-                throw new InputMismatchException("Incorrect input values");
-            }
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            if (commandMap.containsKey(splitCommand[0])) {
-                return commandMap.get(splitCommand[0]).execute();
+            String command = ParseCommand.getCommand(input);
+            String[] args = ParseCommand.getArgs(input);
+            if (commandMap.containsKey(command)) {
+                return commandMap.get(command).execute(args);
             } else {
                 return "Incorrect input values";
             }
