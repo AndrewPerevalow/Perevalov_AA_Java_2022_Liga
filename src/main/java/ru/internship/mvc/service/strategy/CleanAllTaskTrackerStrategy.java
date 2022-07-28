@@ -1,17 +1,19 @@
 package ru.internship.mvc.service.strategy;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.internship.mvc.service.TaskService;
 
 @Service("cleanall")
+@RequiredArgsConstructor
 public class CleanAllTaskTrackerStrategy implements Strategy {
+
+    private final static String COMMAND = "cleanall";
 
     private final TaskService taskService;
 
-    @Autowired
-    public CleanAllTaskTrackerStrategy(TaskService taskService) {
-        this.taskService = taskService;
+    public static String getCommand() {
+        return COMMAND;
     }
 
     @Override

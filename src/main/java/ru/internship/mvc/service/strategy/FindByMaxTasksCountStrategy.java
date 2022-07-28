@@ -2,7 +2,7 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.service.UserService;
+import ru.internship.mvc.service.UserInfoService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +15,7 @@ public class FindByMaxTasksCountStrategy implements Strategy {
 
     private static final int COUNT_DATES = 2;
 
-    private final UserService userService;
+    private final UserInfoService userInfoService;
 
     @Override
     public String execute(String... args) {
@@ -30,7 +30,7 @@ public class FindByMaxTasksCountStrategy implements Strategy {
             } catch (ParseException exception) {
                 return "Parse fail: " + exception.getMessage();
             }
-            return userService.findByMaxTasksCount(status,first,second).toString();
+            return userInfoService.findByMaxTasksCount(status,first,second).toString();
         } else {
             throw new InputMismatchException("Invalid date interval");
         }
