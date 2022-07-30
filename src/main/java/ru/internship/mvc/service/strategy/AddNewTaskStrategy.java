@@ -2,15 +2,10 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.model.Project;
-import ru.internship.mvc.model.Task;
-import ru.internship.mvc.model.User;
+import ru.internship.mvc.dto.InputTaskDto;
 import ru.internship.mvc.model.enums.Status;
-import ru.internship.mvc.repo.ProjectRepo;
-import ru.internship.mvc.repo.UserRepo;
 import ru.internship.mvc.service.TaskService;
 
-import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,8 +19,6 @@ public class AddNewTaskStrategy implements Strategy {
     private final static int COUNT_ARGS = 5;
 
     private final TaskService taskService;
-    private final UserRepo userRepo;
-    private final ProjectRepo projectRepo;
 
     public static String getCommand() {
         return COMMAND;
@@ -46,18 +39,12 @@ public class AddNewTaskStrategy implements Strategy {
         } catch (ParseException exception) {
             return "Parse fail: " + exception.getMessage();
         }
-        User user = userRepo.findById(idUser)
-                .orElseThrow(() -> new EntityNotFoundException("User with this id doesn't exist"));
-        Project project = projectRepo.findById(idProject)
-                .orElseThrow(() -> new EntityNotFoundException("Project with this id doesn't exist"));
         if (isValidInput(header, description, deadline)) {
-            Task newTask = new Task();
+            InputTaskDto newTask = new InputTaskDto();
             newTask.setHeader(header);
             newTask.setDescription(description);
-            newTask.setUser(user);
             newTask.setDeadline(deadline);
             newTask.setStatus(Status.DEFAULT_STATUS.getStatus());
-            newTask.setProject(project);
             return "Added task: " + taskService.addNewTask(idUser, idProject, newTask).toString();
         } else {
             throw new InputMismatchException("Incorrect input values");

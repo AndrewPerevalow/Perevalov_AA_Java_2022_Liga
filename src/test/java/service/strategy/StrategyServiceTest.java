@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import ru.internship.mvc.dto.UserFindMaxTasksDTO;
+import ru.internship.mvc.dto.InputTaskDto;
+import ru.internship.mvc.dto.InputUserDto;
+import ru.internship.mvc.dto.UserFindMaxTasksDto;
 import ru.internship.mvc.model.Project;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
@@ -47,14 +49,14 @@ class StrategyServiceTest {
 
     List<Task> taskList;
     List<User> userList;
-    UserFindMaxTasksDTO userFindMaxTasksDTO;
+    UserFindMaxTasksDto userFindMaxTasksDTO;
     Project project;
 
     {
         try {
-            userList = List.of(new User(1L, "testName1", "testSurname1", "testPatronymic1", "testLogin1", "testEmail@mail.com1", "testPassword1", new ArrayList<>(), new ArrayList<>()),
-                               new User(2L, "testName2", "testSurname2", "testPatronymic2", "testLogin2", "testEmail@mail.com2", "testPassword2", new ArrayList<>(), new ArrayList<>()),
-                               new User(3L, "testName3", "testSurname3", "testPatronymic3", "testLogin3", "testEmail@mail.com3", "testPassword3", new ArrayList<>(), new ArrayList<>())
+            userList = List.of(new User(1L, "testName1", "testSurname1", "testPatronymic1", "testLogin1", "testEmail@mail.com1", "testPassword1", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()),
+                               new User(2L, "testName2", "testSurname2", "testPatronymic2", "testLogin2", "testEmail@mail.com2", "testPassword2", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()),
+                               new User(3L, "testName3", "testSurname3", "testPatronymic3", "testLogin3", "testEmail@mail.com3", "testPassword3", new ArrayList<>(), new ArrayList<>(), new ArrayList<>())
             );
             taskList = List.of(new Task(1L, "task1", "task desc1", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-09-03"), "Новое", new ArrayList<>(), new Project()),
                     new Task(2L, "task2", "task desc2", userList.get(0), new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-20"), "В работе", new ArrayList<>(), new Project()),
@@ -69,7 +71,7 @@ class StrategyServiceTest {
 
             project = new Project(1L, "header", "desc", userList, taskList);
 
-            userFindMaxTasksDTO = new UserFindMaxTasksDTO();
+            userFindMaxTasksDTO = new UserFindMaxTasksDto();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -84,10 +86,10 @@ class StrategyServiceTest {
                         .filter(task -> task.getStatus().equals("Новое")).toList()
                 );
         Mockito.when(taskService.changeTaskStatus(anyLong(), anyString())).thenReturn(taskList.get(1));
-        Mockito.when(taskService.addNewTask(anyLong(), anyLong(), any(Task.class))).thenReturn(taskList.get(0));
+        Mockito.when(taskService.addNewTask(anyLong(), anyLong(), any(InputTaskDto.class))).thenReturn(taskList.get(0));
         Mockito.when(taskService.removeTask(anyLong())).thenReturn("Task removed");
-        Mockito.when(taskService.editTask(anyLong(), anyLong(), anyLong(), any(Task.class))).thenReturn(taskList.get(2));
-        Mockito.when(userService.addNewUser(anyLong(), any(User.class))).thenReturn(userList.get(0));
+        Mockito.when(taskService.editTask(anyLong(), anyLong(), anyLong(), any(InputTaskDto.class))).thenReturn(taskList.get(2));
+        Mockito.when(userService.addNewUser(anyLong(), any(InputUserDto.class))).thenReturn(userList.get(0));
         Mockito.when(userService.removeUser(anyLong())).thenReturn("User removed");
         Mockito.when(taskService.cleanAllTaskTracker()).thenReturn("All clean");
         Mockito.when(projectRepo.findById(anyLong())).thenReturn(Optional.ofNullable(project));
@@ -105,10 +107,10 @@ class StrategyServiceTest {
     Strategy printAllTasksStrategy = new PrintAllTaskTrackerImplStrategy(taskInfoService);
     Strategy printAllFilterTasksStrategy = new FilterAllTasksForUsersByStatusStrategy(taskInfoService);
     Strategy changeTaskStatusStrategy = new ChangeTaskStatusStrategy(taskService);
-    Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService, userRepo, projectRepo);
+    Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService);
     Strategy removeTaskStrategy = new RemoveTaskStrategy(taskService);
-    Strategy editTaskStrategy = new EditTaskStrategy(taskService, taskRepo, userRepo, projectRepo);
-    Strategy addNewUserStrategy = new AddNewUserStrategy(userService, projectRepo);
+    Strategy editTaskStrategy = new EditTaskStrategy(taskService);
+    Strategy addNewUserStrategy = new AddNewUserStrategy(userService);
     Strategy removeUserStrategy = new RemoveUserStrategy(userService);
     Strategy cleanAllTaskTrackerStrategy = new CleanAllTaskTrackerStrategy(taskService);
     Strategy findByMaxTasksCountStrategy = new FindByMaxTasksCountStrategy(userInfoService);

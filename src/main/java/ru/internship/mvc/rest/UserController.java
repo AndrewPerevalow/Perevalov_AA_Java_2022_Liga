@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.mvc.model.User;
+import ru.internship.mvc.dto.InputUserDto;
 import ru.internship.mvc.service.UserInfoService;
 import ru.internship.mvc.service.UserService;
 
@@ -50,8 +51,9 @@ public class UserController {
     }
 
     @PostMapping("/projects/{id-project}/manage-users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewUser(@PathVariable("id-project") Long idProject,
-                                           @Valid @RequestBody User user,
+                                           @Valid @RequestBody InputUserDto userDto,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
@@ -60,15 +62,16 @@ public class UserController {
             return ResponseEntity.ok(errors);
         }
         try {
-            return ResponseEntity.ok(userService.addNewUser(idProject, user));
+            return ResponseEntity.ok(userService.addNewUser(idProject, userDto));
         } catch (EntityNotFoundException exception) {
             return ResponseEntity.ok(exception.getMessage());
         }
     }
 
     @PutMapping("/manage-users/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #userDto.name eq authentication.name")
     public ResponseEntity<?> updateUser(@PathVariable("id") Long id,
-                                        @Valid @RequestBody User user,
+                                        @Valid @RequestBody InputUserDto userDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
@@ -77,13 +80,14 @@ public class UserController {
             return ResponseEntity.ok(errors);
         }
         try {
-            return ResponseEntity.ok(userService.updateUser(id, user));
+            return ResponseEntity.ok(userService.updateUser(id, userDto));
         } catch (EntityNotFoundException exception) {
             return ResponseEntity.ok(exception.getMessage());
         }
     }
 
     @DeleteMapping("/manage-users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(userService.removeUser(id));

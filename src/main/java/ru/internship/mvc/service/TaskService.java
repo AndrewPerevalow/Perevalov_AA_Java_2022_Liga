@@ -2,6 +2,7 @@ package ru.internship.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.internship.mvc.dto.InputTaskDto;
 import ru.internship.mvc.model.Project;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
@@ -9,6 +10,7 @@ import ru.internship.mvc.model.enums.Status;
 import ru.internship.mvc.repo.ProjectRepo;
 import ru.internship.mvc.repo.TaskRepo;
 import ru.internship.mvc.repo.UserRepo;
+import ru.internship.mvc.util.TaskMapper;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Date;
@@ -23,12 +25,14 @@ public class TaskService {
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
 
-    public Task addNewTask(Long idUser, Long idProject, Task task) {
+    public Task addNewTask(Long idUser, Long idProject, InputTaskDto inputTask) {
         User user = userRepo.findById(idUser)
                 .orElseThrow(() -> new EntityNotFoundException("User with this id doesn't exist"));
         Project project = projectRepo.findById(idProject)
                 .orElseThrow(() -> new EntityNotFoundException("Project with this id doesn't exist"));
-        if (isDateValid(task.getDeadline())) {
+        if (isDateValid(inputTask.getDeadline())) {
+            Task task = new Task();
+            TaskMapper.DtoToEntity(task, inputTask);
             task.setUser(user);
             task.setProject(project);
             return taskRepo.save(task);
@@ -57,7 +61,7 @@ public class TaskService {
         }
     }
 
-    public Task editTask(Long id, Long idUser, Long idProject, Task updatedTask) {
+    public Task editTask(Long id, Long idUser, Long idProject, InputTaskDto updatedTask) {
         Task task = taskRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
         User user = userRepo.findById(idUser)
@@ -65,10 +69,8 @@ public class TaskService {
         Project project = projectRepo.findById(idProject)
                 .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
         if (isDateValid(updatedTask.getDeadline())) {
-            task.setHeader(updatedTask.getHeader());
-            task.setDescription(updatedTask.getDescription());
+            TaskMapper.DtoToEntity(task, updatedTask);
             task.setUser(user);
-            task.setDeadline(updatedTask.getDeadline());
             task.setProject(project);
             return taskRepo.save(task);
         } else {

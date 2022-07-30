@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class UserFindMaxTasksDTO {
+public class UserFindMaxTasksDto {
     private Long id;
     private String name;
     private List<Task> tasks;
 
-    public static UserFindMaxTasksDTO mapToUserDto(List<Tuple> tuples) {
+    public static UserFindMaxTasksDto mapToUserDto(List<Tuple> tuples) {
 
         if (tuples.size() == 0) {
             throw new EntityNotFoundException("User and tasks not found");
@@ -27,7 +27,7 @@ public class UserFindMaxTasksDTO {
             taskList.add(tuple.get(0, Task.class));
         }
 
-        UserFindMaxTasksDTO dto = new UserFindMaxTasksDTO();
+        UserFindMaxTasksDto dto = new UserFindMaxTasksDto();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setTasks(taskList);

@@ -23,7 +23,7 @@ public class Comment {
     private String content;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_task")
     private Task task;
 }
