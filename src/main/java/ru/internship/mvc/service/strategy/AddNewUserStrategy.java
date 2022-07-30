@@ -2,15 +2,10 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.model.Project;
-import ru.internship.mvc.model.User;
-import ru.internship.mvc.repo.ProjectRepo;
+import ru.internship.mvc.dto.InputUserDto;
 import ru.internship.mvc.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
 @Service("adduser")
 @RequiredArgsConstructor
@@ -20,7 +15,6 @@ public class AddNewUserStrategy implements Strategy {
     private final static int COUNT_ARGS = 7;
 
     private final UserService userService;
-    private final ProjectRepo projectRepo;
 
     public static String getCommand() {
         return COMMAND;
@@ -38,19 +32,14 @@ public class AddNewUserStrategy implements Strategy {
         String email = args[4];
         String password = args[5];
         Long idProject = Long.parseLong(args[6]);
-        Project project = projectRepo.findById(idProject)
-                .orElseThrow(() -> new EntityNotFoundException("Project with this id doesn't exist"));
-        List<Project> projectList = new ArrayList<>();
-        projectList.add(project);
         if (isValidInput(name, surname, patronymic, login, email, password)) {
-            User newUser = new User();
+            InputUserDto newUser = new InputUserDto();
             newUser.setName(name);
             newUser.setSurname(surname);
             newUser.setPatronymic(patronymic);
             newUser.setLogin(login);
             newUser.setEmail(email);
             newUser.setPassword(password);
-            newUser.setProjects(projectList);
             userService.addNewUser(idProject, newUser);
         return "New user: " + name + " saved";
         } else {

@@ -2,15 +2,9 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.model.Project;
-import ru.internship.mvc.model.Task;
-import ru.internship.mvc.model.User;
-import ru.internship.mvc.repo.ProjectRepo;
-import ru.internship.mvc.repo.TaskRepo;
-import ru.internship.mvc.repo.UserRepo;
+import ru.internship.mvc.dto.InputTaskDto;
 import ru.internship.mvc.service.TaskService;
 
-import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,9 +18,6 @@ public class EditTaskStrategy implements Strategy {
     private final static int COUNT_ARGS = 6;
 
     private final TaskService taskService;
-    private final TaskRepo taskRepo;
-    private final UserRepo userRepo;
-    private final ProjectRepo projectRepo;
 
     public static String getCommand() {
         return COMMAND;
@@ -48,18 +39,11 @@ public class EditTaskStrategy implements Strategy {
         } catch (ParseException exception) {
             return "Parse fail: " + exception.getMessage();
         }
-        Task task = taskRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
-        User user = userRepo.findById(idUser)
-                .orElseThrow(() -> new EntityNotFoundException("User with this id doesn't exist"));
-        Project project = projectRepo.findById(idUser)
-                .orElseThrow(() -> new EntityNotFoundException("Project with this id doesn't exist"));
         if (isValidInput(header, description, deadline)) {
+            InputTaskDto task = new InputTaskDto();
             task.setHeader(header);
             task.setDescription(description);
-            task.setUser(user);
             task.setDeadline(deadline);
-            task.setProject(project);
         taskService.editTask(id, idUser, idProject, task);
             return "Task: " + id + " edited";
         } else {

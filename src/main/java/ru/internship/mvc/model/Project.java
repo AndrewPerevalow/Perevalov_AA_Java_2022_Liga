@@ -2,6 +2,8 @@ package ru.internship.mvc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -32,5 +34,6 @@ public class Project {
 
     @JsonIgnore
     @OneToMany(mappedBy = "project")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Task> tasks;
 }

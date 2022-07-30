@@ -2,10 +2,9 @@ package ru.internship.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.internship.mvc.dto.UserFindMaxTasksDTO;
+import ru.internship.mvc.dto.UserFindMaxTasksDto;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.Task_;
 import ru.internship.mvc.model.User;
@@ -42,7 +41,7 @@ public class UserInfoService {
         return userRepo.findAll();
     }
 
-    public UserFindMaxTasksDTO findByMaxTasksCount(String status, Date first, Date second) {
+    public UserFindMaxTasksDto findByMaxTasksCount(String status, Date first, Date second) {
         if (status.equals(Status.DEFAULT_STATUS.getStatus()) ||
                 status.equals(Status.WORK_STATUS.getStatus()) ||
                 status.equals(Status.COMPLETE_STATUS.getStatus())) {
@@ -69,7 +68,7 @@ public class UserInfoService {
 
             TypedQuery<Tuple> typedQuery = entityManager.createQuery(criteriaQuery);
             List<Tuple> result = typedQuery.getResultList();
-            return UserFindMaxTasksDTO.mapToUserDto(result);
+            return UserFindMaxTasksDto.mapToUserDto(result);
         }
         else {
             throw new InputMismatchException("Incorrect status");

@@ -3,9 +3,10 @@ package ru.internship.mvc.rest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.mvc.model.Task;
+import ru.internship.mvc.dto.InputTaskDto;
 import ru.internship.mvc.service.TaskInfoService;
 import ru.internship.mvc.service.TaskService;
 
@@ -56,9 +57,10 @@ public class TaskController {
     }
 
     @PostMapping("users/{id-user}/projects/{id-project}/manage-tasks")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewTask(@PathVariable("id-user") Long idUser,
                                            @PathVariable("id-project") Long idProject,
-                                           @Valid @RequestBody Task task,
+                                           @Valid @RequestBody InputTaskDto taskDto,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
@@ -66,14 +68,19 @@ public class TaskController {
                     .toList();
             return ResponseEntity.ok(errors);
         }
-        return ResponseEntity.ok(taskService.addNewTask(idUser, idProject, task));
+        try {
+            return ResponseEntity.ok(taskService.addNewTask(idUser, idProject, taskDto));
+        } catch (EntityNotFoundException | InputMismatchException exception) {
+            return ResponseEntity.ok(exception.getMessage());
+        }
     }
 
     @PutMapping("users/{id-user}/projects/{id-project}/manage-tasks/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @userInfoService.getOne(#idUser).name eq authentication.name")
     public ResponseEntity<?> updateTask(@PathVariable("id") Long id,
                                         @PathVariable("id-user") Long idUser,
                                         @PathVariable("id-project") Long idProject,
-                                        @Valid @RequestBody Task task,
+                                        @Valid @RequestBody InputTaskDto taskDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
@@ -82,13 +89,14 @@ public class TaskController {
             return ResponseEntity.ok(errors);
         }
         try {
-            return ResponseEntity.ok(taskService.editTask(id, idUser,idProject, task));
+            return ResponseEntity.ok(taskService.editTask(id, idUser,idProject, taskDto));
         } catch (EntityNotFoundException | InputMismatchException exception) {
             return ResponseEntity.ok(exception.getMessage());
         }
     }
 
     @PutMapping("manage-tasks/update-status/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #taskInfoService.getOne(id).user.name eq authentication.name")
     public ResponseEntity<?> updateTaskByStatus(@PathVariable("id") Long id,
                                                 @RequestParam("status") String status) {
         try {
@@ -99,7 +107,8 @@ public class TaskController {
     }
 
     @DeleteMapping("/manage-tasks/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteTask(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(taskService.removeTask(id));
         } catch (EntityNotFoundException exception) {

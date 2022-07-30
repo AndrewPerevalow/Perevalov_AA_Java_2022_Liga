@@ -14,3 +14,8 @@ spring:
     password: pass
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5400/database1
+  security:
+    user:
+      name: andrey
+      password: andrey
+      roles: admin
