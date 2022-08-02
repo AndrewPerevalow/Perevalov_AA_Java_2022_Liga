@@ -13,9 +13,14 @@ import java.util.InputMismatchException;
 @RequiredArgsConstructor
 public class FindByMaxTasksCountStrategy implements Strategy {
 
+    private final static String COMMAND = "find_user_by_max_count_tasks";
     private static final int COUNT_DATES = 2;
 
     private final UserInfoService userInfoService;
+
+    public static String getCommand() {
+        return COMMAND;
+    }
 
     @Override
     public String execute(String... args) {

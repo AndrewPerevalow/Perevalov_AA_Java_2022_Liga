@@ -1,6 +1,5 @@
 package ru.internship.mvc.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -23,7 +22,6 @@ public class Role implements GrantedAuthority {
     private Long id;
     private String name;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 

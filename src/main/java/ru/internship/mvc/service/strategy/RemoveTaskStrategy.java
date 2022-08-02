@@ -6,11 +6,11 @@ import ru.internship.mvc.service.TaskService;
 
 import java.util.InputMismatchException;
 
-@Service("removetask")
+@Service("remove_task")
 @RequiredArgsConstructor
 public class RemoveTaskStrategy implements Strategy {
 
-    private final static String COMMAND = "removetask";
+    private final static String COMMAND = "remove_task";
     private final static int COUNT_ARGS = 1;
 
     private final TaskService taskService;

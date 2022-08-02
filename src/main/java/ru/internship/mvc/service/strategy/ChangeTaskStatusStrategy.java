@@ -6,11 +6,11 @@ import ru.internship.mvc.service.TaskService;
 
 import java.util.InputMismatchException;
 
-@Service("changestatus")
+@Service("change_status")
 @RequiredArgsConstructor
 public class ChangeTaskStatusStrategy implements Strategy {
 
-    private final static String COMMAND = "changestatus";
+    private final static String COMMAND = "change_status";
     private final static int COUNT_ARGS = 2;
 
     private final TaskService taskService;

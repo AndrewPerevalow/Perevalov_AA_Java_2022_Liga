@@ -6,11 +6,11 @@ import ru.internship.mvc.service.UserService;
 
 import java.util.InputMismatchException;
 
-@Service("removeuser")
+@Service("remove_user")
 @RequiredArgsConstructor
 public class RemoveUserStrategy implements Strategy {
 
-    private final static String COMMAND = "removeuser";
+    private final static String COMMAND = "remove_user";
     private final static int COUNT_ARGS = 1;
 
     private final UserService userService;

@@ -1,7 +1,7 @@
-package ru.internship.mvc.dto;
+package ru.internship.mvc.dto.output;
 
-import lombok.Data;
-
+import lombok.Getter;
+import lombok.Setter;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
 
@@ -10,7 +10,8 @@ import javax.persistence.Tuple;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class UserFindMaxTasksDto {
     private Long id;
     private String name;
@@ -18,7 +19,7 @@ public class UserFindMaxTasksDto {
 
     public static UserFindMaxTasksDto mapToUserDto(List<Tuple> tuples) {
 
-        if (tuples.size() == 0) {
+        if (tuples.isEmpty()) {
             throw new EntityNotFoundException("User and tasks not found");
         }
         User user = tuples.get(0).get(1, User.class);

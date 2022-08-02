@@ -1,6 +1,6 @@
 package ru.internship.mvc.util;
 
-import ru.internship.mvc.dto.InputUserDto;
+import ru.internship.mvc.dto.input.InputUserDto;
 import ru.internship.mvc.model.User;
 
 public class UserMapper {

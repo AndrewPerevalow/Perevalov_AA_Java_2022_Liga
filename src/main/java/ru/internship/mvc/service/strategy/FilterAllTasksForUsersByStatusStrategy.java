@@ -6,11 +6,11 @@ import ru.internship.mvc.service.TaskInfoService;
 
 import java.util.InputMismatchException;
 
-@Service("printall_withfilter")
+@Service("printall_with_filter")
 @RequiredArgsConstructor
 public class FilterAllTasksForUsersByStatusStrategy implements Strategy {
 
-    private final static String COMMAND = "printall_withfilter";
+    private final static String COMMAND = "printall_with_filter";
     private final static int COUNT_ARGS = 2;
 
     private final TaskInfoService taskInfoService;

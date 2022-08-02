@@ -2,7 +2,7 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.dto.InputTaskDto;
+import ru.internship.mvc.dto.input.InputTaskDto;
 import ru.internship.mvc.service.TaskService;
 
 import java.text.ParseException;
@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
 
-@Service("edittask")
+@Service("edit_task")
 @RequiredArgsConstructor
 public class EditTaskStrategy implements Strategy {
 
-    private final static String COMMAND = "edittask";
+    private final static String COMMAND = "edit_task";
     private final static int COUNT_ARGS = 6;
 
     private final TaskService taskService;
