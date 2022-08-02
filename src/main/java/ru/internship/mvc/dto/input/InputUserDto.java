@@ -1,13 +1,15 @@
-package ru.internship.mvc.dto;
+package ru.internship.mvc.dto.input;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class InputUserDto {
 
     @NotEmpty(message = "Name should not be empty")

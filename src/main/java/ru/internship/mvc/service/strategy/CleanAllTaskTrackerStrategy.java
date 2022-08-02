@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.internship.mvc.service.TaskService;
 
-@Service("cleanall")
+@Service("clean_all")
 @RequiredArgsConstructor
 public class CleanAllTaskTrackerStrategy implements Strategy {
 
-    private final static String COMMAND = "cleanall";
+    private final static String COMMAND = "clean_all";
 
     private final TaskService taskService;
 

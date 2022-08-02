@@ -2,7 +2,8 @@ package ru.internship.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.dto.InputTaskDto;
+import org.springframework.transaction.annotation.Transactional;
+import ru.internship.mvc.dto.input.InputTaskDto;
 import ru.internship.mvc.model.Project;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
@@ -19,6 +20,7 @@ import java.util.InputMismatchException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskService {
 
     private final TaskRepo taskRepo;
@@ -51,9 +53,7 @@ public class TaskService {
     public Task changeTaskStatus(Long idTask, String newStatus) {
         Task task = taskRepo.findById(idTask)
                 .orElseThrow(() -> new EntityNotFoundException("Task with this id doesn't exist"));
-        if (newStatus.equals(Status.DEFAULT_STATUS.getStatus()) ||
-                newStatus.equals(Status.WORK_STATUS.getStatus()) ||
-                newStatus.equals(Status.COMPLETE_STATUS.getStatus())) {
+        if (validStatus(newStatus)) {
             task.setStatus(newStatus);
             return taskRepo.save(task);
         } else {
@@ -92,5 +92,11 @@ public class TaskService {
         Date currentDate = new Date();
         int result = inputDate.compareTo(currentDate);
         return result >= 0;
+    }
+
+    private boolean validStatus(String status) {
+        return status.equals(Status.DEFAULT_STATUS.getStatus()) ||
+                status.equals(Status.WORK_STATUS.getStatus()) ||
+                status.equals(Status.COMPLETE_STATUS.getStatus());
     }
 }

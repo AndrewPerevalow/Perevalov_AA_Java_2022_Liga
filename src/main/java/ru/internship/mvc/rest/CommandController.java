@@ -10,7 +10,7 @@ import ru.internship.mvc.service.strategy.StrategyService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tracker/v1")
-public class Controller {
+public class CommandController {
 
     private final StrategyService strategyService;
 

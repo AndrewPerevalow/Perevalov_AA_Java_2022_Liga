@@ -5,7 +5,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.mvc.model.Project;
+import ru.internship.mvc.dto.input.InputProjectDto;
 import ru.internship.mvc.service.ProjectInfoService;
 import ru.internship.mvc.service.ProjectService;
 
@@ -36,7 +36,7 @@ public class ProjectController {
     }
 
     @PostMapping("/manage-projects")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project,
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody InputProjectDto project,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
@@ -49,7 +49,7 @@ public class ProjectController {
 
     @PutMapping("/manage-projects/{id}")
     public ResponseEntity<?> updateProject(@PathVariable("id") Long id,
-                                           @Valid @RequestBody Project project,
+                                           @Valid @RequestBody InputProjectDto project,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()

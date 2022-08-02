@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.mvc.dto.InputTaskDto;
+import ru.internship.mvc.dto.input.InputTaskDto;
 import ru.internship.mvc.service.TaskInfoService;
 import ru.internship.mvc.service.TaskService;
 

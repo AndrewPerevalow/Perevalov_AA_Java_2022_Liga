@@ -19,7 +19,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Comment should not be empty")
     private String content;
 
     @JsonIgnore

@@ -22,10 +22,8 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Header should not be empty")
-    private String header;
 
-    @NotEmpty(message = "Description should not be empty")
+    private String header;
     private String description;
 
     @JsonIgnore

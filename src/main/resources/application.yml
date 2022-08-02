@@ -19,3 +19,8 @@ spring:
       name: andrey
       password: andrey
       roles: admin
+jwt:
+  secret-key: keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
+  expiration-time:
+    access-token: 3600000
+    refresh-token: 604800000

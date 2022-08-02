@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.mvc.dto.InputUserDto;
+import ru.internship.mvc.dto.input.InputUserDto;
 import ru.internship.mvc.service.UserInfoService;
 import ru.internship.mvc.service.UserService;
 
@@ -45,7 +45,7 @@ public class UserController {
           @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("date-2") Date secondDate) {
         try {
             return ResponseEntity.ok(userInfoService.findByMaxTasksCount(status, firstDate, secondDate));
-        } catch (InputMismatchException exception) {
+        } catch (EntityNotFoundException | InputMismatchException exception) {
             return ResponseEntity.ok(exception.getMessage());
         }
     }

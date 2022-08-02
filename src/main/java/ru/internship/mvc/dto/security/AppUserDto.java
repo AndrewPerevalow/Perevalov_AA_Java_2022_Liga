@@ -1,12 +1,14 @@
-package ru.internship.mvc.dto;
+package ru.internship.mvc.dto.security;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 public class AppUserDto implements UserDetails {
 
     private Long id;

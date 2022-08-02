@@ -2,7 +2,7 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.dto.InputTaskDto;
+import ru.internship.mvc.dto.input.InputTaskDto;
 import ru.internship.mvc.model.enums.Status;
 import ru.internship.mvc.service.TaskService;
 
@@ -11,11 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
 
-@Service("addtask")
+@Service("add_task")
 @RequiredArgsConstructor
 public class AddNewTaskStrategy implements Strategy {
 
-    private final static String COMMAND = "addtask";
+    private final static String COMMAND = "add_task";
     private final static int COUNT_ARGS = 5;
 
     private final TaskService taskService;

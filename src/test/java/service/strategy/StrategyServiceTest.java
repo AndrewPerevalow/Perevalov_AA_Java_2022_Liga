@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import ru.internship.mvc.dto.InputTaskDto;
-import ru.internship.mvc.dto.InputUserDto;
-import ru.internship.mvc.dto.UserFindMaxTasksDto;
+import ru.internship.mvc.dto.input.InputTaskDto;
+import ru.internship.mvc.dto.input.InputUserDto;
+import ru.internship.mvc.dto.output.UserFindMaxTasksDto;
 import ru.internship.mvc.model.Project;
 import ru.internship.mvc.model.Task;
 import ru.internship.mvc.model.User;
@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,6 +52,9 @@ class StrategyServiceTest {
     List<User> userList;
     UserFindMaxTasksDto userFindMaxTasksDTO;
     Project project;
+    Map<String, Strategy> commandMap;
+
+
 
     {
         try {
@@ -100,26 +104,35 @@ class StrategyServiceTest {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
+        Strategy stopApplicationStrategy = new StopApplicationStrategy(Mockito.mock(TaskService.class));
+        Strategy printAllTasksStrategy = new PrintAllTaskTrackerImplStrategy(taskInfoService);
+        Strategy printAllFilterTasksStrategy = new FilterAllTasksForUsersByStatusStrategy(taskInfoService);
+        Strategy changeTaskStatusStrategy = new ChangeTaskStatusStrategy(taskService);
+        Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService);
+        Strategy removeTaskStrategy = new RemoveTaskStrategy(taskService);
+        Strategy editTaskStrategy = new EditTaskStrategy(taskService);
+        Strategy addNewUserStrategy = new AddNewUserStrategy(userService);
+        Strategy removeUserStrategy = new RemoveUserStrategy(userService);
+        Strategy cleanAllTaskTrackerStrategy = new CleanAllTaskTrackerStrategy(taskService);
+        Strategy findByMaxTasksCountStrategy = new FindByMaxTasksCountStrategy(userInfoService);
+
+        commandMap = Map.of
+                (
+                        StopApplicationStrategy.getCommand(), stopApplicationStrategy,
+                        PrintAllTaskTrackerImplStrategy.getCommand(), printAllTasksStrategy,
+                        FilterAllTasksForUsersByStatusStrategy.getCommand(), printAllFilterTasksStrategy,
+                        ChangeTaskStatusStrategy.getCommand(), changeTaskStatusStrategy,
+                        AddNewTaskStrategy.getCommand(), addNewTaskStrategy,
+                        RemoveTaskStrategy.getCommand(), removeTaskStrategy,
+                        EditTaskStrategy.getCommand(), editTaskStrategy,
+                        AddNewUserStrategy.getCommand(), addNewUserStrategy,
+                        RemoveUserStrategy.getCommand(), removeUserStrategy,
+                        CleanAllTaskTrackerStrategy.getCommand(), cleanAllTaskTrackerStrategy
+                );
     }
 
-
-    Strategy stopApplicationStrategy = new StopApplicationStrategy(Mockito.mock(TaskService.class));
-    Strategy printAllTasksStrategy = new PrintAllTaskTrackerImplStrategy(taskInfoService);
-    Strategy printAllFilterTasksStrategy = new FilterAllTasksForUsersByStatusStrategy(taskInfoService);
-    Strategy changeTaskStatusStrategy = new ChangeTaskStatusStrategy(taskService);
-    Strategy addNewTaskStrategy = new AddNewTaskStrategy(taskService);
-    Strategy removeTaskStrategy = new RemoveTaskStrategy(taskService);
-    Strategy editTaskStrategy = new EditTaskStrategy(taskService);
-    Strategy addNewUserStrategy = new AddNewUserStrategy(userService);
-    Strategy removeUserStrategy = new RemoveUserStrategy(userService);
-    Strategy cleanAllTaskTrackerStrategy = new CleanAllTaskTrackerStrategy(taskService);
-    Strategy findByMaxTasksCountStrategy = new FindByMaxTasksCountStrategy(userInfoService);
-
-
-    private final StrategyService strategyService = new StrategyService(stopApplicationStrategy, printAllTasksStrategy,
-            printAllFilterTasksStrategy, changeTaskStatusStrategy, addNewTaskStrategy, removeTaskStrategy,
-            editTaskStrategy, addNewUserStrategy, removeUserStrategy, cleanAllTaskTrackerStrategy, findByMaxTasksCountStrategy
-    );
+    private final StrategyService strategyService = new StrategyService(commandMap);
 
     @Nested
     @DisplayName("Negative")

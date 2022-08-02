@@ -2,16 +2,16 @@ package ru.internship.mvc.service.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.internship.mvc.dto.InputUserDto;
+import ru.internship.mvc.dto.input.InputUserDto;
 import ru.internship.mvc.service.UserService;
 
 import java.util.InputMismatchException;
 
-@Service("adduser")
+@Service("add_user")
 @RequiredArgsConstructor
 public class AddNewUserStrategy implements Strategy {
 
-    private final static String COMMAND = "adduser";
+    private final static String COMMAND = "add_user";
     private final static int COUNT_ARGS = 7;
 
     private final UserService userService;
