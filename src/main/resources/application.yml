@@ -1,0 +1,26 @@
+spring:
+  flyway:
+    user: andrey
+    password: pass
+    schemas: carwash
+    url: jdbc:postgresql://localhost:5400/carwash
+    locations: classpath:db/migration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  datasource:
+    username: andrey
+    password: pass
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5400/database1
+  security:
+    user:
+      name: andrey
+      password: andrey
+      roles: admin
+jwt:
+  secret-key: keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
+  expiration-time:
+    access-token: 3600000
+    refresh-token: 604800000

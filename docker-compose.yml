@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  pg:
+    image: postgres
+    ports:
+      - "5400:5432"
+    volumes:
+      - ./vol_1:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: andrey
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: carwash
