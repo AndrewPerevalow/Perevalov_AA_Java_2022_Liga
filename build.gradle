@@ -2,7 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.2'
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'java'
-//    id 'org.flywaydb' version '8.5.11'
+    id 'org.flywaydb.flyway' version '8.5.11'
 }
 
 group = 'com.ligainternship'
@@ -24,7 +24,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.flywaydb:flyway-core'
-//    runtimeOnly 'org.flywaydb:flyway-gradle-plugin'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
@@ -35,4 +34,11 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5400/carwash'
+    user = 'andrey'
+    password = 'pass'
+    schemas = ['carwash']
 }

@@ -13,7 +13,7 @@ spring:
     username: andrey
     password: pass
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5400/database1
+    url: jdbc:postgresql://localhost:5400/carwash
   security:
     user:
       name: andrey
