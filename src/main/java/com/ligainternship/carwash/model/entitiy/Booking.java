@@ -32,8 +32,13 @@ public class Booking {
     @Column(name = "discount_percent")
     private Double discount;
 
-    @OneToMany(mappedBy = "booking")
+    @ManyToMany
     @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "bookings_services",
+            joinColumns = { @JoinColumn(name = "booking_id") },
+            inverseJoinColumns = { @JoinColumn(name = "service_id") }
+    )
     private List<Service> services;
 
     @ManyToOne(fetch = FetchType.LAZY)

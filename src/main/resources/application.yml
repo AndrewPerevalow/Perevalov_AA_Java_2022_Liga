@@ -14,11 +14,6 @@ spring:
     password: pass
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5400/carwash
-  security:
-    user:
-      name: andrey
-      password: andrey
-      roles: admin
 jwt:
   secret-key: keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
   expiration-time:

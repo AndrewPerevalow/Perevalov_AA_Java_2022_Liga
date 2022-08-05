@@ -52,8 +52,9 @@ public class User {
     )
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "user")
-    private Box box;
+    @OneToMany(mappedBy = "user")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Box> boxes;
 
     @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.SUBSELECT)
