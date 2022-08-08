@@ -1,12 +1,9 @@
 package com.ligainternship.carwash.rest.exception;
 
-import com.ligainternship.carwash.exception.ExceptionMessage;
-import com.ligainternship.carwash.exception.InvalidInputException;
-import com.ligainternship.carwash.exception.InvalidTimeException;
-import com.ligainternship.carwash.exception.UserNotFoundException;
+import com.ligainternship.carwash.exception.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
@@ -15,38 +12,62 @@ import java.time.LocalDateTime;
 public class ExceptionHandleController {
 
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<ExceptionMessage> handleInvalidTimeException(InvalidInputException exception) {
-        return new ResponseEntity<>(
-                new ExceptionMessage(
-                        HttpStatus.BAD_REQUEST.value(),
-                        exception.getMessages().toString(),
-                        LocalDateTime.now()
-                ),
-                HttpStatus.BAD_REQUEST
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleInvalidInputException(InvalidInputException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessages().toString(),
+                LocalDateTime.now()
         );
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ExceptionMessage> handleUserNotFoundException(UserNotFoundException exception) {
-        return new ResponseEntity<>(
-                new ExceptionMessage(
-                        HttpStatus.BAD_REQUEST.value(),
-                        exception.getMessage(),
-                        LocalDateTime.now()
-                ),
-                HttpStatus.BAD_REQUEST
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleUserNotFoundException(UserNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
         );
     }
 
-    /*@ExceptionHandler(InvalidTimeException.class)
-    public ResponseEntity<ExceptionMessage> handleUserNotFoundException(InvalidTimeException exception) {
-        return new ResponseEntity<>(
-                new ExceptionMessage(
-                        HttpStatus.BAD_REQUEST.value(),
-                        exception.getMessage(),
-                        LocalDateTime.now()
-                ),
-                HttpStatus.BAD_REQUEST
+    @ExceptionHandler(OperationNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleOperationNotFoundException(OperationNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
         );
-    }*/
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleBookingNotFoundException(BookingNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(DiscountNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleDiscountNotFoundException(DiscountNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(BoxNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleBoxNotFoundException(BoxNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
 }

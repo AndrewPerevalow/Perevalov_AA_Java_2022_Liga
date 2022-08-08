@@ -43,4 +43,8 @@ public class Box {
     @OneToMany(mappedBy = "box")
     @Fetch(FetchMode.SUBSELECT)
     private List<Booking> bookings;
+
+    public Long getId() {
+        return id;
+    }
 }

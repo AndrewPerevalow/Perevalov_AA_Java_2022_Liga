@@ -9,26 +9,27 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "services")
+@Table(name = "operations")
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Service {
+public class Operation {
 
     @Id
     @Column(name ="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "lead_time_minutes")
-    private Long leadTime;
+    private Integer leadTime;
 
     @Column(name = "price")
     private Double price;
 
-    @ManyToMany(mappedBy = "services")
+    @ManyToMany(mappedBy = "operations")
     private List<Booking> bookings;
 }

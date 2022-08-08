@@ -1,5 +1,6 @@
 package com.ligainternship.carwash.model.entitiy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -21,31 +23,47 @@ public class Booking {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "date")
+    private LocalDate date;
+
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @Column(name = "status")
     private String status;
 
     @Column(name = "discount_percent")
-    private Double discount;
+    private Double discount = 0d;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "user_is_come")
+    private boolean userIsCome;
 
     @ManyToMany
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(
-            name = "bookings_services",
+            name = "bookings_operations",
             joinColumns = { @JoinColumn(name = "booking_id") },
-            inverseJoinColumns = { @JoinColumn(name = "service_id") }
+            inverseJoinColumns = { @JoinColumn(name = "operation_id") }
     )
-    private List<Service> services;
+    private List<Operation> operations;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "box_id")
     private Box box;
 }

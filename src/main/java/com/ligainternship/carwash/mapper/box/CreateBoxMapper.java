@@ -12,8 +12,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring", uses = {UserService.class})
 public interface CreateBoxMapper {
 
-//    CreateBoxMapper INSTANCE = Mappers.getMapper(CreateBoxMapper.class);
-
     @Mapping(target = "id", source = "box.id")
     @Mapping(target = "name", source = "box.name")
     @Mapping(target = "ratio", source = "box.ratio")
