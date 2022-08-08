@@ -7,7 +7,6 @@ import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
 import com.ligainternship.carwash.exception.BookingNotFoundException;
 import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
-import com.ligainternship.carwash.mapper.booking.UpdateBookingMapper;
 import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
@@ -38,7 +37,6 @@ public class BookingService {
     private final BookingRepo bookingRepo;
     private final BoxService boxService;
     private final CreateBookingMapper createBookingMapper;
-    private final UpdateBookingMapper updateBookingMapper;
     private final FilterBookingByBoxIdAndDate filterBookingByBoxIdAndDate;
     private final FilterBookingByDate filterBookingByDate;
 
@@ -92,21 +90,30 @@ public class BookingService {
         return createBookingMapper.entityToDto(booking);
     }
 
+    public BookingDto complete(Long id) {
+        Booking booking = findById(id);
+        booking.setStatus(Status.COMPLETE.getStatus());
+        booking.setUserIsCome(true);
+        bookingRepo.save(booking);
+        return createBookingMapper.entityToDto(booking);
+    }
+
     public BookingDto createDiscount(CreateDiscountDto createDiscountDto) {
         Booking booking = findById(createDiscountDto.getBookingId());
         booking.setDiscount(createDiscountDto.getValue());
         Double totalPrice = getPriceWithDiscount(getPrice(booking.getOperations()), createDiscountDto.getValue());
         booking.setTotalPrice(totalPrice);
         bookingRepo.save(booking);
-        return updateBookingMapper.entityToDto(booking);
+        return createBookingMapper.entityToDto(booking);
     }
 
-    public void deleteDiscount(Long id) {
+    public BookingDto deleteDiscount(Long id) {
         Booking booking = findById(id);
         Double totalPrice = getPrice(booking.getOperations());
         booking.setTotalPrice(totalPrice);
         booking.setDiscount(0d);
         bookingRepo.save(booking);
+        return createBookingMapper.entityToDto(booking);
     }
 
     private Double getPrice(List<Operation> operations) {

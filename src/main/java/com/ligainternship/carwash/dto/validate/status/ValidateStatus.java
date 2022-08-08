@@ -25,7 +25,7 @@ public class ValidateStatus implements ConstraintValidator<ValidStatus, String> 
 
     private boolean isStatusValid(String status) {
         if (!status.equals(Status.CANCEL.getStatus())) {
-            String message = "If you want cancel booking, status should be " + Status.CANCEL.getStatus();
+            String message = "If you want cancel booking, status should be: " + Status.CANCEL.getStatus();
             log.error(message);
             throw new InvalidStatusException(message);
         }

@@ -71,6 +71,12 @@ public class BookingController {
         return bookingService.createDiscount(createDiscountDto);
     }
 
+    @PutMapping("/bookings/delete-discount/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public BookingDto deleteDiscount(@PathVariable("id") Long id) {
+        return bookingService.deleteDiscount(id);
+    }
+
     @PutMapping("/bookings/cancel-booking")
     @ResponseStatus(code = HttpStatus.OK)
     public BookingDto cancel(@Valid @RequestBody CancelBookingDto cancelBookingDto,
@@ -84,9 +90,9 @@ public class BookingController {
         return bookingService.cancel(cancelBookingDto);
     }
 
-    @PutMapping("/bookings/delete-discount/{id}")
+    @PutMapping("/bookings/complete-booking/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void deleteDiscount(@PathVariable("id") Long id) {
-        bookingService.deleteDiscount(id);
+    public BookingDto complete(@PathVariable("id") Long id) {
+        return bookingService.complete(id);
     }
 }
