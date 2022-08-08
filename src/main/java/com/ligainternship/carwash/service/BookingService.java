@@ -4,6 +4,7 @@ import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
+import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
 import com.ligainternship.carwash.exception.BookingNotFoundException;
 import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
 import com.ligainternship.carwash.mapper.booking.UpdateBookingMapper;
@@ -12,10 +13,12 @@ import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
 import com.ligainternship.carwash.model.enums.Status;
 import com.ligainternship.carwash.repo.BookingRepo;
-import com.ligainternship.carwash.service.filter.FilterByBoxIdAndDate;
+import com.ligainternship.carwash.service.filter.FilterBookingByBoxIdAndDate;
+import com.ligainternship.carwash.service.filter.FilterBookingByDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -36,7 +39,8 @@ public class BookingService {
     private final BoxService boxService;
     private final CreateBookingMapper createBookingMapper;
     private final UpdateBookingMapper updateBookingMapper;
-    private final FilterByBoxIdAndDate filterByBoxIdAndDate;
+    private final FilterBookingByBoxIdAndDate filterBookingByBoxIdAndDate;
+    private final FilterBookingByDate filterBookingByDate;
 
     @Transactional(readOnly = true)
     public Booking findById(Long id) {
@@ -52,9 +56,19 @@ public class BookingService {
     @Transactional(readOnly = true)
     public Page<BookingDto> findByBoxIdAndDate(Long id, LocalDate date, LocalTime time, Pageable pageable) {
         Box box = boxService.findById(id);
-        Specification<Booking> specification = filterByBoxIdAndDate.getSpec(box, date, time);
+        Specification<Booking> specification = filterBookingByBoxIdAndDate.getSpec(box, date, time);
         Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
         return bookings.map(createBookingMapper::entityToDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TotalSumDto> findSumTotalPriceByDate(LocalDate fromDate, LocalDate toDate, Pageable pageable) {
+        Specification<Booking> specification = filterBookingByDate.getSpec(fromDate, toDate);
+        List<Booking> bookings = bookingRepo.findAll(specification);
+        Double totalSum = getTotalSum(bookings);
+        TotalSumDto totalSumDto = new TotalSumDto();
+        totalSumDto.setTotalSum(totalSum);
+        return new PageImpl<>(List.of(totalSumDto), pageable, 1);
     }
 
     public BookingDto create(CreateBookingDto createBookingDto) {
@@ -116,5 +130,12 @@ public class BookingService {
     private LocalTime getEndTime(LocalTime startTime, int leadTime, double ratio) {
         return startTime
                 .plusMinutes((int) Math.ceil((leadTime * ratio)));
+    }
+
+    private Double getTotalSum(List<Booking> bookings) {
+        return bookings.stream()
+                .map(Booking::getTotalPrice)
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 }

@@ -1,6 +1,6 @@
 package com.ligainternship.carwash.model.enums;
 
-public enum Role {
+public enum Roles {
     ADMIN("ROLE_ADMIN"),
     OPERATOR("ROLE_OPERATOR"),
     USER("ROLE_USER"),
@@ -8,7 +8,7 @@ public enum Role {
 
     private final String role;
 
-    Role(String role) {
+    Roles(String role) {
         this.role = role;
     }
 

@@ -1,5 +1,6 @@
 package com.ligainternship.carwash.model.entitiy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,7 @@ public class User {
 
     @ManyToMany
     @Fetch(FetchMode.SUBSELECT)
+    @JsonIgnore
     @JoinTable(
             name = "users_roles",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -54,10 +56,12 @@ public class User {
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     private List<Box> boxes;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     private List<Booking> bookings;
 

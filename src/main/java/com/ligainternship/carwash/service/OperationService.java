@@ -34,10 +34,6 @@ public class OperationService {
         return operationRepo.findAllById(ids);
     }
 
-    public List<Long> findIds(List<Operation> operations) {
-        return operations.stream().map(Operation::getId).toList();
-    }
-
     public OperationDto create(CreateOperationDto createOperationDto) {
         Operation operation = createOperationMapper.dtoToEntity(createOperationDto);
         operationRepo.save(operation);

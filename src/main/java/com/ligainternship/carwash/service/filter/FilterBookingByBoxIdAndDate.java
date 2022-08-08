@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FilterByBoxIdAndDate {
+public class FilterBookingByBoxIdAndDate {
 
     public Specification<Booking> getSpec(Box box, LocalDate date, LocalTime time) {
 
@@ -39,7 +39,4 @@ public class FilterByBoxIdAndDate {
             }
         };
     }
-
-
-
 }

@@ -2,12 +2,10 @@ package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.box.CreateBoxDto;
 import com.ligainternship.carwash.dto.response.box.BoxDto;
-import com.ligainternship.carwash.exception.BookingNotFoundException;
 import com.ligainternship.carwash.exception.BoxNotFoundException;
 import com.ligainternship.carwash.mapper.box.CreateBoxMapper;
-import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
-import com.ligainternship.carwash.model.enums.Role;
+import com.ligainternship.carwash.model.enums.Roles;
 import com.ligainternship.carwash.repo.BoxRepo;
 import com.ligainternship.carwash.service.filter.FilterUserByRole;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +51,9 @@ public class BoxService {
     }
 
     public BoxDto create(CreateBoxDto createBoxDto) {
-        filterUserByRole.findByIdAndRole(createBoxDto.getUserId(), Role.OPERATOR.getRole());
+        filterUserByRole.findByIdAndRole(createBoxDto.getUserId(), Roles.OPERATOR.getRole());
         Box box = createBoxMapper.dtoToEntity(createBoxDto);
         boxRepo.save(box);
         return createBoxMapper.entityToDto(box);
-    }
-
-    public Long getBoxId(Box box) {
-        return box.getId();
     }
 }

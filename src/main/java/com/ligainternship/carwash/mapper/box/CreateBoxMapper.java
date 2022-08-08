@@ -3,11 +3,9 @@ package com.ligainternship.carwash.mapper.box;
 import com.ligainternship.carwash.dto.request.box.CreateBoxDto;
 import com.ligainternship.carwash.dto.response.box.BoxDto;
 import com.ligainternship.carwash.model.entitiy.Box;
-import com.ligainternship.carwash.repo.UserRepo;
 import com.ligainternship.carwash.service.UserService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {UserService.class})
 public interface CreateBoxMapper {
@@ -26,4 +24,8 @@ public interface CreateBoxMapper {
     @Mapping(target = "workToTime", source = "createBoxDto.workToTime")
     @Mapping(target = "user", source = "createBoxDto.userId")
     Box dtoToEntity(CreateBoxDto createBoxDto);
+
+    default Long map(Box box) {
+        return box.getId();
+    }
 }

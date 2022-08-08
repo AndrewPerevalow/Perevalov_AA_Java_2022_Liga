@@ -3,14 +3,17 @@ package com.ligainternship.carwash.mapper.booking;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.model.entitiy.Booking;
-import com.ligainternship.carwash.service.BoxService;
+import com.ligainternship.carwash.model.entitiy.Box;
+import com.ligainternship.carwash.model.entitiy.Operation;
 import com.ligainternship.carwash.service.OperationService;
 import com.ligainternship.carwash.service.UserService;
 import com.ligainternship.carwash.util.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {OperationService.class, UserService.class, BoxService.class, StringUtils.class})
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = {OperationService.class, UserService.class, StringUtils.class})
 public interface CreateBookingMapper {
 
     @Mapping(target = "id", source = "booking.id")
@@ -30,5 +33,11 @@ public interface CreateBookingMapper {
     @Mapping(target = "user", source = "createBookingDto.userId")
     Booking dtoToEntity(CreateBookingDto createBookingDto);
 
+    default Long map(Box box) {
+        return box.getId();
+    }
 
+    default List<Long> map(List<Operation> operations) {
+        return operations.stream().map(Operation::getId).toList();
+    }
 }

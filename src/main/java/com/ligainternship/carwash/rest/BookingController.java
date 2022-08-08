@@ -4,6 +4,7 @@ import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
+import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
 import com.ligainternship.carwash.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,18 @@ public class BookingController {
     @GetMapping("{id}/bookings")
     @ResponseStatus(code = HttpStatus.OK)
     public Page<BookingDto> findByBoxIdAndDate(@PathVariable("id") Long id,
-                                                          @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("date") LocalDate date,
-                                                          @DateTimeFormat(pattern = "HH:mm") @RequestParam("time")LocalTime time,
-                                                          Pageable pageable) {
+                                               @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("date") LocalDate date,
+                                               @DateTimeFormat(pattern = "HH:mm") @RequestParam("time")LocalTime time,
+                                               Pageable pageable) {
         return bookingService.findByBoxIdAndDate(id, date, time, pageable);
+    }
+
+    @GetMapping("/bookings/total-sum")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Page<TotalSumDto> findByDate(@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("dateFrom") LocalDate dateFrom,
+                                        @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("dateTo") LocalDate dateTo,
+                                        Pageable pageable) {
+        return bookingService.findSumTotalPriceByDate(dateFrom, dateTo, pageable);
     }
 
     @PostMapping("/bookings")
