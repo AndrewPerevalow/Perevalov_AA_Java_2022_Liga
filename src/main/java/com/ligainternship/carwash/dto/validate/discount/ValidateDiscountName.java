@@ -27,7 +27,7 @@ public class ValidateDiscountName implements ConstraintValidator<ValidDiscountNa
 
     private static boolean isDiscountNameValid(String name) {
         if (!(name.equals(MAX_DISCOUNT) || name.equals((MIN_DISCOUNT)))) {
-            String message = "Discount name should be: " + MIN_DISCOUNT + " or " + MAX_DISCOUNT;
+            String message = String.format("Discount name should be: %s or %s",MIN_DISCOUNT,MAX_DISCOUNT);
             log.error(message);
             throw new InvalidDiscountException(message);
         }

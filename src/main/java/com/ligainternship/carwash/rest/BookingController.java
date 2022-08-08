@@ -2,6 +2,7 @@ package com.ligainternship.carwash.rest;
 
 import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
+import com.ligainternship.carwash.dto.request.booking.UpdateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
@@ -28,7 +29,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @GetMapping("{id}/bookings")
+    @GetMapping("/bookings/box/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public Page<BookingDto> findByBoxIdAndDate(@PathVariable("id") Long id,
                                                @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam("date") LocalDate date,
@@ -45,6 +46,12 @@ public class BookingController {
         return bookingService.findSumTotalPriceByDate(dateFrom, dateTo, pageable);
     }
 
+    @GetMapping("/bookings/user/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Page<BookingDto> findByUserAndStatus(@PathVariable("id") Long id, Pageable pageable) {
+        return bookingService.findAllByUserIdAndStatus(id, pageable);
+    }
+
     @PostMapping("/bookings")
     @ResponseStatus(code = HttpStatus.OK)
     public BookingDto create(@Valid @RequestBody CreateBookingDto createBookingDto,
@@ -56,6 +63,20 @@ public class BookingController {
             throw new InvalidInputException(errors);
         }
         return bookingService.create(createBookingDto);
+    }
+
+    @PutMapping("/bookings/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public BookingDto update(@PathVariable("id") Long id,
+                             @Valid @RequestBody UpdateBookingDto updateBookingDto,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+            throw new InvalidInputException(errors);
+        }
+        return bookingService.update(id, updateBookingDto);
     }
 
     @PutMapping("/bookings/create-discount")
@@ -95,4 +116,6 @@ public class BookingController {
     public BookingDto complete(@PathVariable("id") Long id) {
         return bookingService.complete(id);
     }
+
+
 }

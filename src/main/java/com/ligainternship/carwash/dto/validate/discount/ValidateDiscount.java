@@ -34,7 +34,7 @@ public class ValidateDiscount implements ConstraintValidator<ValidDiscount, Doub
         Double min = discountService.findByName(MIN_DISCOUNT).getValue();
         Double max = discountService.findByName(MAX_DISCOUNT).getValue();
         if (value > max || value < min) {
-            String message = "Discount should be between " + min + " and " + max;
+            String message = String.format("Discount should be between %f and %f", min, max);
             log.error(message);
             throw new InvalidDiscountException(message);
         }

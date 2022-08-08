@@ -2,6 +2,7 @@ package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
+import com.ligainternship.carwash.dto.request.booking.UpdateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
@@ -10,10 +11,13 @@ import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
 import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
+import com.ligainternship.carwash.model.entitiy.User;
 import com.ligainternship.carwash.model.enums.Status;
 import com.ligainternship.carwash.repo.BookingRepo;
 import com.ligainternship.carwash.service.filter.FilterBookingByBoxIdAndDate;
 import com.ligainternship.carwash.service.filter.FilterBookingByDate;
+import com.ligainternship.carwash.service.filter.FilterBookingByUserAndStatus;
+import com.ligainternship.carwash.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,9 +40,12 @@ public class BookingService {
 
     private final BookingRepo bookingRepo;
     private final BoxService boxService;
+    private final UserService userService;
+    private final OperationService operationService;
     private final CreateBookingMapper createBookingMapper;
     private final FilterBookingByBoxIdAndDate filterBookingByBoxIdAndDate;
     private final FilterBookingByDate filterBookingByDate;
+    private final FilterBookingByUserAndStatus filterBookingByUserAndStatus;
 
     @Transactional(readOnly = true)
     public Booking findById(Long id) {
@@ -56,6 +63,11 @@ public class BookingService {
         Box box = boxService.findById(id);
         Specification<Booking> specification = filterBookingByBoxIdAndDate.getSpec(box, date, time);
         Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
+        if (bookings.isEmpty()) {
+            String message = String.format("Booking for box id %d on date %s and time %s not found", id, date, time);
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
         return bookings.map(createBookingMapper::entityToDto);
     }
 
@@ -63,10 +75,28 @@ public class BookingService {
     public Page<TotalSumDto> findSumTotalPriceByDate(LocalDate fromDate, LocalDate toDate, Pageable pageable) {
         Specification<Booking> specification = filterBookingByDate.getSpec(fromDate, toDate);
         List<Booking> bookings = bookingRepo.findAll(specification);
+        if (bookings.isEmpty()) {
+            String message = String.format("Bookings from %s to %s not found", fromDate, toDate);
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
         Double totalSum = getTotalSum(bookings);
         TotalSumDto totalSumDto = new TotalSumDto();
         totalSumDto.setTotalSum(totalSum);
         return new PageImpl<>(List.of(totalSumDto), pageable, 1);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookingDto> findAllByUserIdAndStatus(Long id, Pageable pageable) {
+        User user = userService.findById(id);
+        Specification<Booking> specification = filterBookingByUserAndStatus.getSpec(user);
+        Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
+        if (bookings.isEmpty()) {
+            String message = String.format("Booking not found for user: %s",id);
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
+        return bookings.map(createBookingMapper::entityToDto);
     }
 
     public BookingDto create(CreateBookingDto createBookingDto) {
@@ -78,6 +108,39 @@ public class BookingService {
         booking.setTotalPrice(totalPrice);
         booking.setStatus(Status.ACTIVE.getStatus());
         LocalTime endTime = getEndTime(booking.getStartTime(), totalLeadTime, box.getRatio());
+        booking.setEndTime(endTime);
+        bookingRepo.save(booking);
+        return createBookingMapper.entityToDto(booking);
+    }
+
+    public BookingDto update(Long id, UpdateBookingDto updateBookingDto) {
+        Booking booking = findById(id);
+        if (booking.getStatus().equals(Status.CANCEL.getStatus()) ||
+        booking.getStatus().equals(Status.COMPLETE.getStatus())) {
+            String message = "Booking with this id is cancel or complete";
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
+        List<Operation> operations = operationService.findAllById(updateBookingDto.getOperations());
+        booking.setOperations(operations);
+        Double totalPrice = getPrice(operations);
+        booking.setTotalPrice(totalPrice);
+        if (updateBookingDto.getDate() != null) {
+            LocalDate date = StringUtils.parseDate(updateBookingDto.getDate());
+            Box box = boxService.findByDateAndOperations(date, booking.getStartTime(), getLeadTime(operations));
+            booking.setDate(date);
+            booking.setBox(box);
+        }
+        if (updateBookingDto.getStartTime() != null) {
+            LocalTime startTime = StringUtils.parseTime(updateBookingDto.getStartTime());
+            Box box = boxService.findByDateAndOperations(booking.getDate(), startTime, getLeadTime(operations));
+            booking.setStartTime(startTime);
+            booking.setBox(box);
+        }
+        if (updateBookingDto.isCancel()) {
+            booking.setStatus(Status.CANCEL.getStatus());
+        }
+        LocalTime endTime = getEndTime(booking.getStartTime(), getLeadTime(operations), booking.getBox().getRatio());
         booking.setEndTime(endTime);
         bookingRepo.save(booking);
         return createBookingMapper.entityToDto(booking);

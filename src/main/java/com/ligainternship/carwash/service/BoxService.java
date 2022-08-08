@@ -32,7 +32,7 @@ public class BoxService {
     public Box findByDateAndOperations(LocalDate date, LocalTime startTime, int totalLeadTimeInSeconds) {
         List<Box> boxList = boxRepo.findByDateAndOperations(date, startTime.getHour(), startTime.getMinute(), totalLeadTimeInSeconds);
         if (boxList.isEmpty()) {
-            String message = "Not found free boxes on date: " + date + " and time: "+ startTime;
+            String message = String.format("Not found free boxes on date: %s and time: %s", date, startTime);
             log.error(message);
             throw new BoxNotFoundException(message);
         }
