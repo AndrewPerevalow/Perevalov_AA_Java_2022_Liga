@@ -7,7 +7,6 @@ import com.ligainternship.carwash.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +32,4 @@ public class BoxController {
         }
         return boxService.create(createBoxDto);
     }
-
 }

@@ -1,9 +1,9 @@
 package com.ligainternship.carwash.rest;
 
-import com.ligainternship.carwash.dto.request.discount.UpdateDiscountDto;
-import com.ligainternship.carwash.dto.response.discount.DiscountDto;
+import com.ligainternship.carwash.dto.request.operation.CreateOperationDto;
+import com.ligainternship.carwash.dto.response.operation.OperationDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
-import com.ligainternship.carwash.service.DiscountService;
+import com.ligainternship.carwash.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -16,20 +16,20 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1")
-public class DiscountController {
+public class OperationController {
 
-    private final DiscountService discountService;
+    private final OperationService operationService;
 
-    @PutMapping("/discounts")
+    @PostMapping("/operations")
     @ResponseStatus(code = HttpStatus.OK)
-    public DiscountDto update(@Valid @RequestBody UpdateDiscountDto updateDiscountDto,
-                              BindingResult bindingResult) {
+    public OperationDto create(@Valid @RequestBody CreateOperationDto createOperationDto,
+                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList();
             throw new InvalidInputException(errors);
         }
-        return discountService.update(updateDiscountDto);
+        return operationService.create(createOperationDto);
     }
 }

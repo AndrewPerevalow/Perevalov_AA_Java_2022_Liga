@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DiscountDto {
-    private Double value;
-    private Double totalPrice;
+    private String name;
+    private String value;
 }

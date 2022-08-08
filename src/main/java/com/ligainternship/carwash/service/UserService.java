@@ -18,6 +18,7 @@ public class UserService {
 
     private final UserRepo userRepo;
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         Optional<User> optionalUser = userRepo.findById(id);
         if (optionalUser.isEmpty()) {
@@ -27,4 +28,5 @@ public class UserService {
         }
         return optionalUser.get();
     }
+
 }

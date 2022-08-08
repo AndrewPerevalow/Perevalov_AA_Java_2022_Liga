@@ -2,6 +2,7 @@ package com.ligainternship.carwash.rest;
 
 import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
+import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
 import com.ligainternship.carwash.service.BookingService;
@@ -48,6 +49,19 @@ public class BookingController {
         return bookingService.create(createBookingDto);
     }
 
+    @PutMapping("/bookings/create-discount")
+    @ResponseStatus(code = HttpStatus.OK)
+    public BookingDto createDiscount(@Valid @RequestBody CreateDiscountDto createDiscountDto,
+                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+            throw new InvalidInputException(errors);
+        }
+        return bookingService.createDiscount(createDiscountDto);
+    }
+
     @PutMapping("/bookings/cancel-booking")
     @ResponseStatus(code = HttpStatus.OK)
     public BookingDto cancel(@Valid @RequestBody CancelBookingDto cancelBookingDto,
@@ -59,5 +73,11 @@ public class BookingController {
             throw new InvalidInputException(errors);
         }
         return bookingService.cancel(cancelBookingDto);
+    }
+
+    @PutMapping("/bookings/delete-discount/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void deleteDiscount(@PathVariable("id") Long id) {
+        bookingService.deleteDiscount(id);
     }
 }

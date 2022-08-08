@@ -2,9 +2,11 @@ package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.booking.CancelBookingDto;
 import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
+import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.exception.BookingNotFoundException;
-import com.ligainternship.carwash.mapper.box.CreateBookingMapper;
+import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
+import com.ligainternship.carwash.mapper.booking.UpdateBookingMapper;
 import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,7 @@ public class BookingService {
     private final BookingRepo bookingRepo;
     private final BoxService boxService;
     private final CreateBookingMapper createBookingMapper;
+    private final UpdateBookingMapper updateBookingMapper;
     private final FilterByBoxIdAndDate filterByBoxIdAndDate;
 
     @Transactional(readOnly = true)
@@ -55,21 +59,13 @@ public class BookingService {
 
     public BookingDto create(CreateBookingDto createBookingDto) {
         Booking booking = createBookingMapper.dtoToEntity(createBookingDto);
-        int totalLeadTime = booking.getOperations().stream()
-                .map(Operation::getLeadTime)
-                .mapToInt(Integer::intValue)
-                .sum();
+        int totalLeadTime = getLeadTime(booking.getOperations());
         Box box = boxService.findByDateAndOperations(booking.getDate(), booking.getStartTime(), totalLeadTime);
-        Double totalPrice = booking.getOperations().stream()
-                .map(Operation::getPrice)
-                .mapToDouble(Double::doubleValue)
-                .sum();
         booking.setBox(box);
+        Double totalPrice = getPrice(booking.getOperations());
         booking.setTotalPrice(totalPrice);
         booking.setStatus(Status.ACTIVE.getStatus());
-        LocalTime endTime = booking.getStartTime()
-                .plusMinutes((int) Math.ceil(
-                        (totalLeadTime * box.getRatio())));
+        LocalTime endTime = getEndTime(booking.getStartTime(), totalLeadTime, box.getRatio());
         booking.setEndTime(endTime);
         bookingRepo.save(booking);
         return createBookingMapper.entityToDto(booking);
@@ -80,5 +76,45 @@ public class BookingService {
         booking.setStatus(cancelBookingDto.getStatus());
         bookingRepo.save(booking);
         return createBookingMapper.entityToDto(booking);
+    }
+
+    public BookingDto createDiscount(CreateDiscountDto createDiscountDto) {
+        Booking booking = findById(createDiscountDto.getBookingId());
+        booking.setDiscount(createDiscountDto.getValue());
+        Double totalPrice = getPriceWithDiscount(getPrice(booking.getOperations()), createDiscountDto.getValue());
+        booking.setTotalPrice(totalPrice);
+        bookingRepo.save(booking);
+        return updateBookingMapper.entityToDto(booking);
+    }
+
+    public void deleteDiscount(Long id) {
+        Booking booking = findById(id);
+        Double totalPrice = getPrice(booking.getOperations());
+        booking.setTotalPrice(totalPrice);
+        booking.setDiscount(0d);
+        bookingRepo.save(booking);
+    }
+
+    private Double getPrice(List<Operation> operations) {
+        return operations.stream()
+                .map(Operation::getPrice)
+                .mapToDouble(Double::doubleValue)
+                .sum();
+    }
+
+    private  Double getPriceWithDiscount(Double bookingTotalPrice, Double value) {
+        return Math.ceil(bookingTotalPrice * (1 - (value / 100)));
+    }
+
+    private int getLeadTime(List<Operation> operations) {
+        return operations.stream()
+                .map(Operation::getLeadTime)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    private LocalTime getEndTime(LocalTime startTime, int leadTime, double ratio) {
+        return startTime
+                .plusMinutes((int) Math.ceil((leadTime * ratio)));
     }
 }
