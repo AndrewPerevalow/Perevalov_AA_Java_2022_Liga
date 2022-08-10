@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 @Slf4j
-public class ValidateStatus implements ConstraintValidator<ValidStatus, String> {
+public class ValidateCancelStatus implements ConstraintValidator<ValidCancelStatus, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
@@ -24,14 +24,8 @@ public class ValidateStatus implements ConstraintValidator<ValidStatus, String> 
     }
 
     private boolean isStatusValid(String status) {
-        if (!status.equals(Status.ACTIVE.getStatus())
-                && !status.equals(Status.CANCEL.getStatus())
-                && !status.equals(Status.COMPLETE.getStatus())) {
-            String message = String.format("Invalid status. Three vars of the status: %s, %s, %s",
-                    Status.ACTIVE.getStatus(),
-                    Status.CANCEL.getStatus(),
-                    Status.COMPLETE.getStatus()
-            );
+        if (!status.equals(Status.CANCEL.getStatus())) {
+            String message = "If you want cancel booking, status should be: " + Status.CANCEL.getStatus();
             log.error(message);
             throw new InvalidStatusException(message);
         }

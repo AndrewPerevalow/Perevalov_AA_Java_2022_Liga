@@ -1,6 +1,7 @@
 package com.ligainternship.carwash.repo;
 
 import com.ligainternship.carwash.model.entitiy.Booking;
+import com.ligainternship.carwash.model.entitiy.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,4 +14,5 @@ import java.util.List;
 
 public interface BookingRepo extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
     Page<Booking> findAll(Specification<Booking> specification, Pageable pageable);
+    List<Booking> findAllByUserAndStatus(User user, String status);
 }

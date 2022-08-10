@@ -31,8 +31,9 @@ public class ValidateRole implements ConstraintValidator<ValidRole, Long> {
 
     private boolean isRoleValid(Long id) {
         Role role = roleService.findById(id);
-        if (!role.getName().equals(Roles.OPERATOR.getRole())) {
-            String message = "Roles should be: " + Roles.OPERATOR.getRole();
+        if (!role.getName().equals(Roles.OPERATOR.getRole()) &&
+                !role.getName().equals(Roles.ADMIN.getRole())) {
+            String message = String.format("Roles should be: %s or %s", Roles.OPERATOR.getRole(), Roles.ADMIN.getRole());
             log.error(message);
             throw new InvalidRoleException(message);
         }

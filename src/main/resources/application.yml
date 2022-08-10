@@ -15,7 +15,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5400/carwash
 jwt:
-  secret-key: keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
+  secret-key:
+    access-token: acckeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
+    refresh-token: refkeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey
   expiration-time:
-    access-token: 3600000
-    refresh-token: 604800000
+    access-token: 30
+    refresh-token: 7

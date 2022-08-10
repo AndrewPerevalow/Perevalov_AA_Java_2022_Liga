@@ -8,10 +8,12 @@ import com.ligainternship.carwash.model.entitiy.Operation;
 import com.ligainternship.carwash.repo.OperationRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +34,15 @@ public class OperationService {
             throw new OperationNotFoundException(message);
         }
         return operationRepo.findAllById(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OperationDto> findAll(Pageable pageable) {
+        List<Operation> operations = operationRepo.findAll();
+        List<OperationDto> listOperationsDto = operations.stream()
+                .map(createOperationMapper::entityToDto)
+                .toList();
+        return new PageImpl<>(listOperationsDto, pageable, 1);
     }
 
     public OperationDto create(CreateOperationDto createOperationDto) {

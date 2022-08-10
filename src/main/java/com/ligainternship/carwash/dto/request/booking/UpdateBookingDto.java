@@ -1,6 +1,5 @@
 package com.ligainternship.carwash.dto.request.booking;
 
-import com.ligainternship.carwash.dto.validate.status.ValidStatus;
 import lombok.Getter;
 import lombok.Setter;
 

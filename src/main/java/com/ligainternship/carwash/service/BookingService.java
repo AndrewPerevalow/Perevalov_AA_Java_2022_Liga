@@ -6,8 +6,10 @@ import com.ligainternship.carwash.dto.request.booking.UpdateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
 import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
+import com.ligainternship.carwash.dto.response.operation.OperationDto;
 import com.ligainternship.carwash.exception.BookingNotFoundException;
 import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
+import com.ligainternship.carwash.mapper.operation.CreateOperationMapper;
 import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
@@ -43,6 +45,7 @@ public class BookingService {
     private final UserService userService;
     private final OperationService operationService;
     private final CreateBookingMapper createBookingMapper;
+    private final CreateOperationMapper createOperationMapper;
     private final FilterBookingByBoxIdAndDate filterBookingByBoxIdAndDate;
     private final FilterBookingByDate filterBookingByDate;
     private final FilterBookingByUserAndStatus filterBookingByUserAndStatus;
@@ -87,9 +90,9 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookingDto> findAllByUserIdAndStatus(Long id, Pageable pageable) {
+    public Page<BookingDto> findAllByUserIdAndStatus(Long id, String status, Pageable pageable) {
         User user = userService.findById(id);
-        Specification<Booking> specification = filterBookingByUserAndStatus.getSpec(user);
+        Specification<Booking> specification = filterBookingByUserAndStatus.getSpec(user, status);
         Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
         if (bookings.isEmpty()) {
             String message = String.format("Booking not found for user: %s",id);
@@ -97,6 +100,22 @@ public class BookingService {
             throw new BookingNotFoundException(message);
         }
         return bookings.map(createBookingMapper::entityToDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OperationDto> findAllByUserAndCompleteStatus(Long id, Pageable pageable) {
+        User user = userService.findById(id);
+        List<Booking> bookings = bookingRepo.findAllByUserAndStatus(user, Status.COMPLETE.getStatus());
+        if (bookings.isEmpty()) {
+            String message = String.format("Booking not found for user: %s", id);
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
+        List<Operation> operations = getUniqueOperations(bookings);
+        List<OperationDto> listOperationsDto = operations.stream()
+                .map(createOperationMapper::entityToDto)
+                .toList();
+        return new PageImpl<>(listOperationsDto, pageable, 1);
     }
 
     public BookingDto create(CreateBookingDto createBookingDto) {
@@ -115,8 +134,7 @@ public class BookingService {
 
     public BookingDto update(Long id, UpdateBookingDto updateBookingDto) {
         Booking booking = findById(id);
-        if (booking.getStatus().equals(Status.CANCEL.getStatus()) ||
-        booking.getStatus().equals(Status.COMPLETE.getStatus())) {
+        if (!booking.getStatus().equals(Status.ACTIVE.getStatus())) {
             String message = "Booking with this id is cancel or complete";
             log.error(message);
             throw new BookingNotFoundException(message);
@@ -155,6 +173,11 @@ public class BookingService {
 
     public BookingDto complete(Long id) {
         Booking booking = findById(id);
+        if (!checkByDate(booking.getDate(), booking.getStartTime())) {
+            String message = "User try to check in too early";
+            log.error(message);
+            throw new BookingNotFoundException(message);
+        }
         booking.setStatus(Status.COMPLETE.getStatus());
         booking.setUserIsCome(true);
         bookingRepo.save(booking);
@@ -186,7 +209,7 @@ public class BookingService {
                 .sum();
     }
 
-    private  Double getPriceWithDiscount(Double bookingTotalPrice, Double value) {
+    private Double getPriceWithDiscount(Double bookingTotalPrice, Double value) {
         return Math.ceil(bookingTotalPrice * (1 - (value / 100)));
     }
 
@@ -207,5 +230,22 @@ public class BookingService {
                 .map(Booking::getTotalPrice)
                 .mapToDouble(Double::doubleValue)
                 .sum();
+    }
+
+    private List<Operation> getUniqueOperations(List<Booking> bookings) {
+        return bookings.stream()
+                .map(Booking::getOperations)
+                .flatMap(List::stream)
+                .distinct()
+                .toList();
+    }
+
+    private boolean checkByDate(LocalDate date, LocalTime startTime) {
+        LocalDate todayDate = LocalDate.now();
+        LocalTime firstIntervalTime = LocalTime.now();
+        LocalTime secondIntervalTime = LocalTime.now().plusMinutes(30);
+        return date.isEqual(todayDate) &&
+                startTime.isAfter(firstIntervalTime) &&
+                startTime.isBefore(secondIntervalTime);
     }
 }

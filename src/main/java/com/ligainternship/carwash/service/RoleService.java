@@ -28,4 +28,9 @@ public class RoleService {
         }
         return optionalRole.get();
     }
+
+    @Transactional(readOnly = true)
+    public Role findByName(String name) {
+        return roleRepo.findByName(name);
+    }
 }

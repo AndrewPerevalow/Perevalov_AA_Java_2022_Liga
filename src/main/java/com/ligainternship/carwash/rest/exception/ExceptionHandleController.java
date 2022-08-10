@@ -70,4 +70,24 @@ public class ExceptionHandleController {
                 LocalDateTime.now()
         );
     }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleRoleNotFoundException(RoleNotFoundException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleAuthenticationException(AuthenticationException exception) {
+        return new ExceptionMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
 }

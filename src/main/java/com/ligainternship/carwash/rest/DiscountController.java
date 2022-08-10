@@ -7,6 +7,7 @@ import com.ligainternship.carwash.service.DiscountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class DiscountController {
 
     @PutMapping("/discounts")
     @ResponseStatus(code = HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public DiscountDto update(@Valid @RequestBody UpdateDiscountDto updateDiscountDto,
                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

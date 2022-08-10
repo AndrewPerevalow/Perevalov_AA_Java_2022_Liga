@@ -1,6 +1,6 @@
 package com.ligainternship.carwash.dto.request.booking;
 
-import com.ligainternship.carwash.dto.validate.status.ValidStatus;
+import com.ligainternship.carwash.dto.validate.status.ValidCancelStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +17,6 @@ public class CancelBookingDto {
     private Long id;
 
     @NotEmpty(message = "Status should not be empty")
-    @ValidStatus
+    @ValidCancelStatus
     private String status;
 }
