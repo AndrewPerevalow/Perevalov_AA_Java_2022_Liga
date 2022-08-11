@@ -1,0 +1,1987 @@
+{
+	"info": {
+		"_postman_id": "5adbcd6b-977a-4675-8da0-6ba45b0a169b",
+		"name": "API Car Washing V1.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22309494"
+	},
+	"item": [
+		{
+			"name": "Box",
+			"item": [
+				{
+					"name": "Create new box (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"box\",\r\n    \"ratio\" : \"1.5\",\r\n    \"workFromTime\" : \"08:00\",\r\n    \"workToTime\" : \"23:59\",\r\n    \"userId\" : \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/boxes"
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"box\",\r\n    \"ratio\" : \"1.5\",\r\n    \"workFromTime\" : \"08:00\",\r\n    \"workToTime\" : \"23:59\",\r\n    \"userId\" : \"2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/boxes"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Aug 2022 18:45:34 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"name\": \"box\",\n    \"ratio\": 1.5,\n    \"workFromTime\": \"08:00:00\",\n    \"workToTime\": \"23:59:00\",\n    \"operatorName\": \"opername2\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Operation",
+			"item": [
+				{
+					"name": "Get all operations (Admin, Operator, User)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/operations?page=0&size=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"operations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/operations?pageNumber=1&pageSize=5",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/operations?page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"operations"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 11:32:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"name\": \"service1\",\n            \"leadTime\": 15,\n            \"price\": 300\n        },\n        {\n            \"id\": 2,\n            \"name\": \"service2\",\n            \"leadTime\": 30,\n            \"price\": 600\n        },\n        {\n            \"id\": 3,\n            \"name\": \"service3\",\n            \"leadTime\": 35,\n            \"price\": 450\n        },\n        {\n            \"id\": 4,\n            \"name\": \"service4\",\n            \"leadTime\": 60,\n            \"price\": 1000\n        },\n        {\n            \"id\": 5,\n            \"name\": \"service5\",\n            \"leadTime\": 45,\n            \"price\": 2000\n        },\n        {\n            \"id\": 6,\n            \"name\": \"washing\",\n            \"leadTime\": 30,\n            \"price\": 300\n        },\n        {\n            \"id\": 7,\n            \"name\": \"light washing\",\n            \"leadTime\": 15,\n            \"price\": 150\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 7,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 7,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Create new operation (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"light washing\",\r\n    \"leadTime\" : 15,\r\n    \"price\" : 150.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/operations"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/operations",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"washing\",\r\n    \"leadTime\" : 30,\r\n    \"price\" : 300.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/operations"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 09:19:39 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 6,\n    \"name\": \"washing\",\n    \"leadTime\": 30,\n    \"price\": 300\n}"
+						},
+						{
+							"name": "http://localhost:8080/api/v1/operations",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"light washing\",\r\n    \"leadTime\" : 15,\r\n    \"price\" : 150.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/operations"
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 09:27:29 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 400,\n    \"message\": \"[Name should not include digits and symbols, name length should be between 3 and 29]\",\n    \"time\": \"2022-08-08T12:27:29.8712794\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Get all bookings by box and/or date and time (Admin, Operator in his boxes)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/bookings/box/2?date=2022-08-19&time=07:30&page=0&size=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"box",
+								"2"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2022-08-19"
+								},
+								{
+									"key": "time",
+									"value": "07:30"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get all bookings by box and date and time",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/bookings/box/2?date=2022-08-19&time=07:30&page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"bookings",
+										"box",
+										"2"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2022-08-19"
+										},
+										{
+											"key": "time",
+											"value": "07:30"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 11:36:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 9,\n            \"date\": \"2022-08-19\",\n            \"startTime\": \"07:30:00\",\n            \"endTime\": \"07:44:00\",\n            \"status\": \"Cancel\",\n            \"discount\": 0,\n            \"totalPrice\": 300,\n            \"operations\": [\n                1\n            ],\n            \"boxId\": 2\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 1,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 1,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						},
+						{
+							"name": "Get all bookings by box",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/bookings/box/2?page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"bookings",
+										"box",
+										"2"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2022-08-19",
+											"disabled": true
+										},
+										{
+											"key": "time",
+											"value": "07:30",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 19:52:35 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 13,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"08:30:00\",\n            \"endTime\": \"09:15:00\",\n            \"status\": \"Complete\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 2\n        },\n        {\n            \"id\": 8,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"05:30:00\",\n            \"endTime\": \"05:44:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 300,\n            \"operations\": [\n                1\n            ],\n            \"boxId\": 2\n        },\n        {\n            \"id\": 9,\n            \"date\": \"2022-08-19\",\n            \"startTime\": \"07:30:00\",\n            \"endTime\": \"07:44:00\",\n            \"status\": \"Cancel\",\n            \"discount\": 0,\n            \"totalPrice\": 300,\n            \"operations\": [\n                1\n            ],\n            \"boxId\": 2\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 3,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 3,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get all bookings for user and status (Admin, Operator his bookings, User his bookings)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDA3MzEzMiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.t0aLZI37iUGwGqXXO-aNsjEVDdBZHHChnoHommVNb9Q"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/bookings/user/4?status=Active&page=0&size=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"user",
+								"4"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Active"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/user/4",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/bookings/user/4?status=Active&page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"bookings",
+										"user",
+										"4"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "Active"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 11:31:06 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"17:00:00\",\n            \"endTime\": \"18:15:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 4\n        },\n        {\n            \"id\": 2,\n            \"date\": \"2022-08-13\",\n            \"startTime\": \"09:00:00\",\n            \"endTime\": \"10:15:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 4\n        },\n        {\n            \"id\": 3,\n            \"date\": \"2022-08-25\",\n            \"startTime\": \"23:00:00\",\n            \"endTime\": \"23:56:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 3\n        },\n        {\n            \"id\": 4,\n            \"date\": \"2022-08-29\",\n            \"startTime\": \"23:30:00\",\n            \"endTime\": \"00:26:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 3\n        },\n        {\n            \"id\": 5,\n            \"date\": \"2022-09-01\",\n            \"startTime\": \"00:30:00\",\n            \"endTime\": \"01:26:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 3\n        },\n        {\n            \"id\": 6,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"03:30:00\",\n            \"endTime\": \"04:26:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 3\n        },\n        {\n            \"id\": 7,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"05:30:00\",\n            \"endTime\": \"06:26:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 750,\n            \"operations\": [\n                1,\n                3\n            ],\n            \"boxId\": 3\n        },\n        {\n            \"id\": 8,\n            \"date\": \"2022-08-09\",\n            \"startTime\": \"05:30:00\",\n            \"endTime\": \"05:44:00\",\n            \"status\": \"Active\",\n            \"discount\": 0,\n            \"totalPrice\": 300,\n            \"operations\": [\n                1\n            ],\n            \"boxId\": 2\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 8,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 8,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get all complete operations for user(Admin, Operator his bookings, User his bookings)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDA3Mjg2NSwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.pTV-8FXfq-D4yt2SvRBf5vFDM6xNVr29HHhO-VSduvI"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/bookings/operations/user/4?page=0&size=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"operations",
+								"user",
+								"4"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/operations/user/4",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/bookings/operations/user/4?page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"bookings",
+										"operations",
+										"user",
+										"4"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 11:33:34 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"name\": \"service1\",\n            \"leadTime\": 15,\n            \"price\": 300\n        },\n        {\n            \"id\": 3,\n            \"name\": \"service3\",\n            \"leadTime\": 35,\n            \"price\": 450\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 2,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 2,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get total amout by time interval (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/bookings/total-sum?dateFrom=2022-08-09&dateTo=2022-08-30&page=0&size=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"total-sum"
+							],
+							"query": [
+								{
+									"key": "dateFrom",
+									"value": "2022-08-09"
+								},
+								{
+									"key": "dateTo",
+									"value": "2022-08-30"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/total-sum?dateFrom=2022-08-09&dateTo=2022-08-30&pageNumber=1&pageSize=5",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/bookings/total-sum?dateFrom=2022-08-09&dateTo=2022-08-30&page=0&size=20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"bookings",
+										"total-sum"
+									],
+									"query": [
+										{
+											"key": "dateFrom",
+											"value": "2022-08-09"
+										},
+										{
+											"key": "dateTo",
+											"value": "2022-08-30"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 11:37:33 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"totalSum\": 8100\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": false,\n            \"empty\": true,\n            \"unsorted\": true\n        },\n        \"pageSize\": 20,\n        \"pageNumber\": 0,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalPages\": 1,\n    \"totalElements\": 1,\n    \"last\": true,\n    \"number\": 0,\n    \"size\": 20,\n    \"numberOfElements\": 1,\n    \"sort\": {\n        \"sorted\": false,\n        \"empty\": true,\n        \"unsorted\": true\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Create booking (Admin, Operator, User)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\" : \"2022-08-17\",\r\n    \"startTime\" : \"17:00\",\r\n    \"operations\" : [1,3],\r\n    \"userId\" : \"4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/bookings"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"date\" : \"2022-08-17\",\r\n    \"startTime\" : \"17:00\",\r\n    \"operations\" : [1,3],\r\n    \"userId\" : \"4\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/bookings"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Aug 2022 18:44:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 30,\n    \"date\": \"2022-08-17\",\n    \"startTime\": \"17:00:00\",\n    \"endTime\": \"17:56:00\",\n    \"status\": \"Active\",\n    \"discount\": 0,\n    \"totalPrice\": 750,\n    \"operations\": [\n        1,\n        3\n    ],\n    \"boxId\": 3\n}"
+						}
+					]
+				},
+				{
+					"name": "Update booking (Admin, Operator his boxes, User his bookings)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\" : \"2022-08-09\",\r\n    \"startTime\" : \"05:30\",\r\n    \"operations\" : [1],\r\n    \"cancel\" : \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/bookings/8"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/8",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"date\" : \"2022-08-09\",\r\n    \"startTime\" : \"05:30\",\r\n    \"operations\" : [1],\r\n    \"cancel\" : \"false\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/bookings/8"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 22:34:48 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 8,\n    \"date\": \"2022-08-09\",\n    \"startTime\": \"05:30:00\",\n    \"endTime\": \"05:44:00\",\n    \"status\": \"Active\",\n    \"discount\": 0,\n    \"totalPrice\": 300,\n    \"operations\": [\n        1\n    ],\n    \"boxId\": 2\n}"
+						}
+					]
+				},
+				{
+					"name": "Set booking complete (Admin, Operator his boxes, User own bookings)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/bookings/complete-booking/20"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/complete-booking/20",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": "http://localhost:8080/api/v1/bookings/complete-booking/20"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 20:22:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 20,\n    \"date\": \"2022-08-08\",\n    \"startTime\": \"23:00:00\",\n    \"endTime\": \"23:56:00\",\n    \"status\": \"Complete\",\n    \"discount\": 0,\n    \"totalPrice\": 750,\n    \"operations\": [\n        1,\n        3\n    ],\n    \"boxId\": 3\n}"
+						}
+					]
+				},
+				{
+					"name": "Cancel booking (Admin, Operator his boxes, User own bookings)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1,\r\n    \"status\":\"Cancel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/bookings/cancel-booking"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/bookings/cancel-booking",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":1,\r\n    \"status\":\"Cancel\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/bookings/cancel-booking"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Aug 2022 19:50:19 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"date\": \"2022-08-09\",\n    \"startTime\": \"09:00:00\",\n    \"endTime\": \"10:35:00\",\n    \"status\": \"Cancel\",\n    \"discount\": 0,\n    \"totalPrice\": 2750,\n    \"operations\": [],\n    \"boxId\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Set max or min discount (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"max\",\r\n    \"value\" : 20.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/discounts"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/discounts",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"max\",\r\n    \"value\" : 20.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/discounts"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 11:58:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"max\",\n    \"value\": \"20.0\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Set discount (Admin, Operator his boxes)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"value\": 5.0,\r\n    \"bookingId\" : 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/bookings/create-discount"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/discounts",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"value\": 5.0,\r\n    \"bookingId\" : 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/bookings/create-discount"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 11:42:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"date\": \"2022-08-17\",\n    \"startTime\": \"17:00:00\",\n    \"endTime\": \"17:45:00\",\n    \"status\": \"Active\",\n    \"discount\": 5,\n    \"totalPrice\": 713,\n    \"operations\": [\n        1,\n        3\n    ],\n    \"boxId\": 2\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete discount (Admin, Operator his boxes)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/bookings/delete-discount/4"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/discounts/20",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": "http://localhost:8080/api/v1/bookings/delete-discount/4"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 11:44:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Sing up(create new user)  (Anonymous)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Ivan\",\r\n    \"surname\" : \"Petrov\",\r\n    \"login\" : \"ivan4ik3\",\r\n    \"email\" : \"ivan@mail.ru\",\r\n    \"password\" : \"Ivan\",\r\n    \"phoneNumber\" : \"89217753241\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/users"
+					},
+					"response": [
+						{
+							"name": "Sing up(create new user)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"Ivan\",\r\n    \"surname\" : \"Petrov\",\r\n    \"login\" : \"ivan4ik2\",\r\n    \"email\" : \"ivan@mail.ru\",\r\n    \"password\" : \"Ivan\",\r\n    \"phoneNumber\" : \"89217753241\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/users"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 14:15:37 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 10,\n    \"name\": \"Ivan\",\n    \"surname\": \"Petrov\",\n    \"login\": \"ivan4ik2\",\n    \"email\": \"ivan@mail.ru\",\n    \"phoneNumber\": \"89217753241\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update user role to admin or/and operator (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\" : \"4\",\r\n    \"roleId\" : \"3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/users/update-role"
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/api/v1/users/update-role",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\" : \"4\",\r\n    \"roleId\" : \"3\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/users/update-role"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 08 Aug 2022 17:14:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"name\": \"username1\",\n    \"roles\": [\n        \"ROLE_OPERATOR\",\n        \"ROLE_USER\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete user by id (Admin can't delete his account, User can delete only his account)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2Q0aWszIiwiZXhwIjoxNjYwMDgyNzM5LCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dfQ.UJ5iBd3YM6PCUwyGbLtDscq4WM005pd7ssaEAelhgvo"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/users/13"
+					},
+					"response": [
+						{
+							"name": "Delete user by id(Admin can't delete his account)",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": "http://localhost:8080/api/v1/users/13"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 21:36:49 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Log in by login and password  (Anonymous)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\" : \"ivan4ik2\",\r\n    \"password\" : \"Ivan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/auth/login"
+					},
+					"response": [
+						{
+							"name": "Log in by login and password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\" : \"ivan4ik2\",\r\n    \"password\" : \"Ivan\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/auth/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 18:51:05 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDA3Mjg2NSwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.pTV-8FXfq-D4yt2SvRBf5vFDM6xNVr29HHhO-VSduvI\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDY3NTg2NSwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.oUHlhwFM_TJN70_Vfhz7_LBfINiKa_xQE4jefuTTKvQ\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get new access and refresh tokens   (Anonymous)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\" : \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDY3NTg2NSwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.oUHlhwFM_TJN70_Vfhz7_LBfINiKa_xQE4jefuTTKvQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/v1/auth/access-token"
+					},
+					"response": [
+						{
+							"name": "Get new access and refresh tokens",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\" : \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDY3NTg2NSwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.oUHlhwFM_TJN70_Vfhz7_LBfINiKa_xQE4jefuTTKvQ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:8080/api/v1/auth/access-token"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Aug 2022 18:55:32 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDA3MzEzMiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.t0aLZI37iUGwGqXXO-aNsjEVDdBZHHChnoHommVNb9Q\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuNGlrMiIsImV4cCI6MTY2MDY3NjEzMiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.qqQ0XKrK_NS3k7pWTtD619uTYvJCgrULyNm1QDF8KBU\"\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
