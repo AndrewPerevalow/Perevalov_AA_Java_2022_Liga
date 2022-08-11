@@ -1,9 +1,7 @@
 package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.discount.UpdateDiscountDto;
-import com.ligainternship.carwash.dto.response.discount.DiscountDto;
 import com.ligainternship.carwash.exception.DiscountNotFoundException;
-import com.ligainternship.carwash.mapper.discount.UpdateDiscountMapper;
 import com.ligainternship.carwash.model.entitiy.Discount;
 import com.ligainternship.carwash.repo.DiscountRepo;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class DiscountService {
 
     private final DiscountRepo discountRepo;
-    private final UpdateDiscountMapper updateDiscountMapper;
 
     @Transactional(readOnly = true)
     public Discount findByName(String name) {
@@ -33,11 +30,9 @@ public class DiscountService {
         return optionalDiscount.get();
     }
 
-    public DiscountDto update(UpdateDiscountDto updateDiscountDto) {
+    public Discount update(UpdateDiscountDto updateDiscountDto) {
         Discount discount = findByName(updateDiscountDto.getName());
-        discount.setName(updateDiscountDto.getName());
         discount.setValue(updateDiscountDto.getValue());
-        discountRepo.save(discount);
-        return updateDiscountMapper.entityToDto(discount);
+        return discountRepo.save(discount);
     }
 }

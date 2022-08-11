@@ -3,6 +3,8 @@ package com.ligainternship.carwash.rest;
 import com.ligainternship.carwash.dto.request.discount.UpdateDiscountDto;
 import com.ligainternship.carwash.dto.response.discount.DiscountDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
+import com.ligainternship.carwash.mapper.discount.UpdateDiscountMapper;
+import com.ligainternship.carwash.model.entitiy.Discount;
 import com.ligainternship.carwash.service.DiscountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -20,6 +22,7 @@ import java.util.List;
 public class DiscountController {
 
     private final DiscountService discountService;
+    private final UpdateDiscountMapper updateDiscountMapper;
 
     @PutMapping("/discounts")
     @ResponseStatus(code = HttpStatus.OK)
@@ -32,6 +35,7 @@ public class DiscountController {
                     .toList();
             throw new InvalidInputException(errors);
         }
-        return discountService.update(updateDiscountDto);
+        Discount discount = discountService.update(updateDiscountDto);
+        return updateDiscountMapper.entityToDto(discount);
     }
 }

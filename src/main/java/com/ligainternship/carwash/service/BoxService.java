@@ -1,7 +1,6 @@
 package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.box.CreateBoxDto;
-import com.ligainternship.carwash.dto.response.box.BoxDto;
 import com.ligainternship.carwash.exception.BoxNotFoundException;
 import com.ligainternship.carwash.mapper.box.CreateBoxMapper;
 import com.ligainternship.carwash.model.entitiy.Box;
@@ -29,8 +28,8 @@ public class BoxService {
     private final FilterUserByRole filterUserByRole;
 
     @Transactional(readOnly = true)
-    public Box findByDateAndOperations(LocalDate date, LocalTime startTime, int totalLeadTimeInSeconds) {
-        List<Box> boxList = boxRepo.findByDateAndOperations(date, startTime.getHour(), startTime.getMinute(), totalLeadTimeInSeconds);
+    public Box findByDateAndOperations(LocalDate date, LocalTime startTime, int totalLeadTime) {
+        List<Box> boxList = boxRepo.findByDateAndOperations(date, startTime.getHour(), startTime.getMinute(), totalLeadTime);
         if (boxList.isEmpty()) {
             String message = String.format("Not found free boxes on date: %s and time: %s", date, startTime);
             log.error(message);
@@ -50,10 +49,9 @@ public class BoxService {
         return optionalBox.get();
     }
 
-    public BoxDto create(CreateBoxDto createBoxDto) {
+    public Box create(CreateBoxDto createBoxDto) {
         filterUserByRole.findByIdAndRole(createBoxDto.getUserId(), Roles.OPERATOR.getRole());
         Box box = createBoxMapper.dtoToEntity(createBoxDto);
-        boxRepo.save(box);
-        return createBoxMapper.entityToDto(box);
+        return boxRepo.save(box);
     }
 }

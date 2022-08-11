@@ -5,11 +5,8 @@ import com.ligainternship.carwash.dto.request.booking.CreateBookingDto;
 import com.ligainternship.carwash.dto.request.booking.UpdateBookingDto;
 import com.ligainternship.carwash.dto.request.discount.CreateDiscountDto;
 import com.ligainternship.carwash.dto.response.booking.BookingDto;
-import com.ligainternship.carwash.dto.response.booking.TotalSumDto;
-import com.ligainternship.carwash.dto.response.operation.OperationDto;
 import com.ligainternship.carwash.exception.BookingNotFoundException;
 import com.ligainternship.carwash.mapper.booking.CreateBookingMapper;
-import com.ligainternship.carwash.mapper.operation.CreateOperationMapper;
 import com.ligainternship.carwash.model.entitiy.Booking;
 import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.model.entitiy.Operation;
@@ -23,7 +20,6 @@ import com.ligainternship.carwash.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -45,7 +41,6 @@ public class BookingService {
     private final UserService userService;
     private final OperationService operationService;
     private final CreateBookingMapper createBookingMapper;
-    private final CreateOperationMapper createOperationMapper;
     private final FilterBookingByBoxIdAndDate filterBookingByBoxIdAndDate;
     private final FilterBookingByDate filterBookingByDate;
     private final FilterBookingByUserAndStatus filterBookingByUserAndStatus;
@@ -62,7 +57,7 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookingDto> findByBoxIdAndDate(Long id, LocalDate date, LocalTime time, Pageable pageable) {
+    public Page<Booking> findByBoxIdAndDate(Long id, LocalDate date, LocalTime time, Pageable pageable) {
         Box box = boxService.findById(id);
         Specification<Booking> specification = filterBookingByBoxIdAndDate.getSpec(box, date, time);
         Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
@@ -71,11 +66,11 @@ public class BookingService {
             log.error(message);
             throw new BookingNotFoundException(message);
         }
-        return bookings.map(createBookingMapper::entityToDto);
+        return bookings;
     }
 
     @Transactional(readOnly = true)
-    public Page<TotalSumDto> findSumTotalPriceByDate(LocalDate fromDate, LocalDate toDate, Pageable pageable) {
+    public Double findSumTotalPriceByDate(LocalDate fromDate, LocalDate toDate) {
         Specification<Booking> specification = filterBookingByDate.getSpec(fromDate, toDate);
         List<Booking> bookings = bookingRepo.findAll(specification);
         if (bookings.isEmpty()) {
@@ -83,14 +78,11 @@ public class BookingService {
             log.error(message);
             throw new BookingNotFoundException(message);
         }
-        Double totalSum = getTotalSum(bookings);
-        TotalSumDto totalSumDto = new TotalSumDto();
-        totalSumDto.setTotalSum(totalSum);
-        return new PageImpl<>(List.of(totalSumDto), pageable, 1);
+        return getTotalSum(bookings);
     }
 
     @Transactional(readOnly = true)
-    public Page<BookingDto> findAllByUserIdAndStatus(Long id, String status, Pageable pageable) {
+    public Page<Booking> findAllByUserIdAndStatus(Long id, String status, Pageable pageable) {
         User user = userService.findById(id);
         Specification<Booking> specification = filterBookingByUserAndStatus.getSpec(user, status);
         Page<Booking> bookings = bookingRepo.findAll(specification, pageable);
@@ -99,11 +91,11 @@ public class BookingService {
             log.error(message);
             throw new BookingNotFoundException(message);
         }
-        return bookings.map(createBookingMapper::entityToDto);
+        return bookings;
     }
 
     @Transactional(readOnly = true)
-    public Page<OperationDto> findAllByUserAndCompleteStatus(Long id, Pageable pageable) {
+    public List<Operation> findAllByUserAndCompleteStatus(Long id) {
         User user = userService.findById(id);
         List<Booking> bookings = bookingRepo.findAllByUserAndStatus(user, Status.COMPLETE.getStatus());
         if (bookings.isEmpty()) {
@@ -111,14 +103,10 @@ public class BookingService {
             log.error(message);
             throw new BookingNotFoundException(message);
         }
-        List<Operation> operations = getUniqueOperations(bookings);
-        List<OperationDto> listOperationsDto = operations.stream()
-                .map(createOperationMapper::entityToDto)
-                .toList();
-        return new PageImpl<>(listOperationsDto, pageable, 1);
+        return getUniqueOperations(bookings);
     }
 
-    public BookingDto create(CreateBookingDto createBookingDto) {
+    public Booking create(CreateBookingDto createBookingDto) {
         Booking booking = createBookingMapper.dtoToEntity(createBookingDto);
         int totalLeadTime = getLeadTime(booking.getOperations());
         Box box = boxService.findByDateAndOperations(booking.getDate(), booking.getStartTime(), totalLeadTime);
@@ -128,11 +116,10 @@ public class BookingService {
         booking.setStatus(Status.ACTIVE.getStatus());
         LocalTime endTime = getEndTime(booking.getStartTime(), totalLeadTime, box.getRatio());
         booking.setEndTime(endTime);
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
-    public BookingDto update(Long id, UpdateBookingDto updateBookingDto) {
+    public Booking update(Long id, UpdateBookingDto updateBookingDto) {
         Booking booking = findById(id);
         if (!booking.getStatus().equals(Status.ACTIVE.getStatus())) {
             String message = "Booking with this id is cancel or complete";
@@ -160,18 +147,16 @@ public class BookingService {
         }
         LocalTime endTime = getEndTime(booking.getStartTime(), getLeadTime(operations), booking.getBox().getRatio());
         booking.setEndTime(endTime);
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
-    public BookingDto cancel(CancelBookingDto cancelBookingDto) {
+    public Booking cancel(CancelBookingDto cancelBookingDto) {
         Booking booking = findById(cancelBookingDto.getId());
         booking.setStatus(cancelBookingDto.getStatus());
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
-    public BookingDto complete(Long id) {
+    public Booking complete(Long id) {
         Booking booking = findById(id);
         if (!checkByDate(booking.getDate(), booking.getStartTime())) {
             String message = "User try to check in too early";
@@ -180,26 +165,23 @@ public class BookingService {
         }
         booking.setStatus(Status.COMPLETE.getStatus());
         booking.setUserIsCome(true);
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
-    public BookingDto createDiscount(CreateDiscountDto createDiscountDto) {
+    public Booking createDiscount(CreateDiscountDto createDiscountDto) {
         Booking booking = findById(createDiscountDto.getBookingId());
         booking.setDiscount(createDiscountDto.getValue());
         Double totalPrice = getPriceWithDiscount(getPrice(booking.getOperations()), createDiscountDto.getValue());
         booking.setTotalPrice(totalPrice);
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
-    public BookingDto deleteDiscount(Long id) {
+    public Booking deleteDiscount(Long id) {
         Booking booking = findById(id);
         Double totalPrice = getPrice(booking.getOperations());
         booking.setTotalPrice(totalPrice);
         booking.setDiscount(0d);
-        bookingRepo.save(booking);
-        return createBookingMapper.entityToDto(booking);
+        return bookingRepo.save(booking);
     }
 
     private Double getPrice(List<Operation> operations) {

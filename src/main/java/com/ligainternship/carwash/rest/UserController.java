@@ -5,6 +5,9 @@ import com.ligainternship.carwash.dto.request.user.UpdateUserRoleDto;
 import com.ligainternship.carwash.dto.response.user.UserDto;
 import com.ligainternship.carwash.dto.response.user.UserRoleDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
+import com.ligainternship.carwash.mapper.user.CreateUserMapper;
+import com.ligainternship.carwash.mapper.user.UpdateUserRoleMapper;
+import com.ligainternship.carwash.model.entitiy.User;
 import com.ligainternship.carwash.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -22,6 +25,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UpdateUserRoleMapper updateUserRoleMapper;
+    private final CreateUserMapper createUserMapper;
 
     @PostMapping("/users")
     @ResponseStatus(code = HttpStatus.OK)
@@ -33,7 +38,8 @@ public class UserController {
                     .toList();
             throw new InvalidInputException(errors);
         }
-        return userService.create(createUserDto);
+        User user = userService.create(createUserDto);
+        return createUserMapper.entityToDto(user);
     }
 
     @PutMapping("/users/update-role")
@@ -47,7 +53,8 @@ public class UserController {
                     .toList();
             throw new InvalidInputException(errors);
         }
-        return userService.updateRole(updateUserRoleDto);
+        User user = userService.updateRole(updateUserRoleDto);
+        return updateUserRoleMapper.entityToDto(user);
     }
 
     @DeleteMapping("/users/{id}")

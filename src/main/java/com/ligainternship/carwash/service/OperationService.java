@@ -1,16 +1,12 @@
 package com.ligainternship.carwash.service;
 
 import com.ligainternship.carwash.dto.request.operation.CreateOperationDto;
-import com.ligainternship.carwash.dto.response.operation.OperationDto;
 import com.ligainternship.carwash.exception.OperationNotFoundException;
 import com.ligainternship.carwash.mapper.operation.CreateOperationMapper;
 import com.ligainternship.carwash.model.entitiy.Operation;
 import com.ligainternship.carwash.repo.OperationRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,21 +29,16 @@ public class OperationService {
             log.error(message);
             throw new OperationNotFoundException(message);
         }
-        return operationRepo.findAllById(ids);
+        return operationList;
     }
 
     @Transactional(readOnly = true)
-    public Page<OperationDto> findAll(Pageable pageable) {
-        List<Operation> operations = operationRepo.findAll();
-        List<OperationDto> listOperationsDto = operations.stream()
-                .map(createOperationMapper::entityToDto)
-                .toList();
-        return new PageImpl<>(listOperationsDto, pageable, 1);
+    public List<Operation> findAll() {
+        return operationRepo.findAll();
     }
 
-    public OperationDto create(CreateOperationDto createOperationDto) {
+    public Operation create(CreateOperationDto createOperationDto) {
         Operation operation = createOperationMapper.dtoToEntity(createOperationDto);
-        operationRepo.save(operation);
-        return createOperationMapper.entityToDto(operation);
+        return operationRepo.save(operation);
     }
 }

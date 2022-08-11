@@ -1,12 +1,16 @@
 package com.ligainternship.carwash.dto.request.operation;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateOperationDto {
 
     @NotEmpty(message = "Booking date should not be empty")

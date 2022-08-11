@@ -3,11 +3,8 @@ package com.ligainternship.carwash.service;
 import com.ligainternship.carwash.dto.AppUserDto;
 import com.ligainternship.carwash.dto.request.user.CreateUserDto;
 import com.ligainternship.carwash.dto.request.user.UpdateUserRoleDto;
-import com.ligainternship.carwash.dto.response.user.UserDto;
-import com.ligainternship.carwash.dto.response.user.UserRoleDto;
 import com.ligainternship.carwash.exception.UserNotFoundException;
 import com.ligainternship.carwash.mapper.user.CreateUserMapper;
-import com.ligainternship.carwash.mapper.user.UpdateUserRoleMapper;
 import com.ligainternship.carwash.model.entitiy.Role;
 import com.ligainternship.carwash.model.entitiy.User;
 import com.ligainternship.carwash.model.enums.Roles;
@@ -34,7 +31,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final RoleService roleService;
-    private final UpdateUserRoleMapper updateUserRoleMapper;
     private final CreateUserMapper createUserMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -54,7 +50,7 @@ public class UserService implements UserDetailsService {
         return userRepo.findByLogin(login);
     }
 
-    public UserDto create(CreateUserDto createUserDto) {
+    public User create(CreateUserDto createUserDto) {
         User user = createUserMapper.dtoToEntity(createUserDto);
         user.setPassword(bCryptPasswordEncoder.encode(createUserDto.getPassword()));
         Role role = roleService.findByName(Roles.USER.getRole());
@@ -62,11 +58,10 @@ public class UserService implements UserDetailsService {
         roles.add(role);
         user.setRoles(roles);
         user.setExist(true);
-        userRepo.save(user);
-        return createUserMapper.entityToDto(user);
+        return userRepo.save(user);
     }
 
-    public UserRoleDto updateRole(UpdateUserRoleDto updateUserRoleDto) {
+    public User updateRole(UpdateUserRoleDto updateUserRoleDto) {
         User user = findById(updateUserRoleDto.getUserId());
         List<Role> roles = user.getRoles();
         Role role = roleService.findById(updateUserRoleDto.getRoleId());
@@ -74,8 +69,7 @@ public class UserService implements UserDetailsService {
             roles.add(role);
         }
         user.setRoles(roles);
-        userRepo.save(user);
-        return updateUserRoleMapper.entityToDto(user);
+        return userRepo.save(user);
     }
 
     public void delete(Long id) {

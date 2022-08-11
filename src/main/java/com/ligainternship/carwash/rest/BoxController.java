@@ -3,6 +3,8 @@ package com.ligainternship.carwash.rest;
 import com.ligainternship.carwash.dto.request.box.CreateBoxDto;
 import com.ligainternship.carwash.dto.response.box.BoxDto;
 import com.ligainternship.carwash.exception.InvalidInputException;
+import com.ligainternship.carwash.mapper.box.CreateBoxMapper;
+import com.ligainternship.carwash.model.entitiy.Box;
 import com.ligainternship.carwash.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -20,6 +22,7 @@ import java.util.List;
 public class BoxController {
 
     private final BoxService boxService;
+    private final CreateBoxMapper createBoxMapper;
 
     @PostMapping("/boxes")
     @ResponseStatus(code = HttpStatus.OK)
@@ -32,6 +35,7 @@ public class BoxController {
                     .toList();
             throw new InvalidInputException(errors);
         }
-        return boxService.create(createBoxDto);
+        Box box = boxService.create(createBoxDto);
+        return createBoxMapper.entityToDto(box);
     }
 }

@@ -1,13 +1,17 @@
 package com.ligainternship.carwash.dto.request.box;
 
 import com.ligainternship.carwash.dto.validate.time.ValidTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateBoxDto {
 
     @NotEmpty(message = "Name should not be empty")

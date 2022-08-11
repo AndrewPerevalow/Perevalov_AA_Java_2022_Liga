@@ -1,6 +1,10 @@
 package com.ligainternship.carwash.dto.request.booking;
 
+import com.ligainternship.carwash.dto.validate.date.ValidActualDate;
+import com.ligainternship.carwash.dto.validate.time.ValidTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
@@ -8,9 +12,16 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateBookingDto {
 
+    @NotEmpty(message = "Booking date should not be empty")
+    @ValidActualDate
     private String date;
+
+    @NotEmpty(message = "Booking time should not be empty")
+    @ValidTime
     private String startTime;
 
     @NotEmpty(message = "List operations should contain as least one operation")
